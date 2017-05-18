@@ -8,7 +8,8 @@ import (
 	irc "github.com/thoj/go-ircevent"
 )
 
-const baseURL = "https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&num=1&fields=items(title,link)&prettyPrint=false&q=%s"
+// GoogleURL base URL for Google Search
+const GoogleURL = "https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&num=1&fields=items(title,link)&prettyPrint=false&q=%s"
 
 // GoogleCommand the Google class
 type GoogleCommand struct{}
@@ -22,7 +23,7 @@ type GoogleResult struct {
 }
 
 func (google GoogleCommand) getTargetURL(searchString string) string {
-	return fmt.Sprintf(baseURL, config.GoogleAPI, config.GoogleCX, searchString)
+	return fmt.Sprintf(GoogleURL, config.GoogleAPI, config.GoogleCX, searchString)
 }
 
 func (google GoogleCommand) search(searchString string) GoogleResult {

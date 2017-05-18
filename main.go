@@ -19,7 +19,9 @@ func handleError(appError error) {
 
 func mapCommands() {
 	functions["!go"] = HelloCommand{}
+	functions["!time"] = TimeCommand{}
 	functions["!g"] = GoogleCommand{}
+	functions["!ud"] = UDCommand{}
 }
 
 func run(ircobj *irc.Connection, event *irc.Event) {

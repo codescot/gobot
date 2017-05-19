@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"net/url"
+
 	irc "github.com/thoj/go-ircevent"
 )
 
@@ -30,7 +32,8 @@ func (google GoogleCommand) search(searchString string) GoogleResult {
 	var err error
 
 	httpCommand := HTTPCommand{}
-	targetURL := google.getTargetURL(searchString)
+	queryString := url.QueryEscape(searchString)
+	targetURL := google.getTargetURL(queryString)
 	body, err := httpCommand.getJSONResult(targetURL)
 
 	var result GoogleResult
@@ -44,7 +47,8 @@ func (google GoogleCommand) execute(ircobj *irc.Connection, event *irc.Event) {
 	sender := event.Nick
 	messageChannel := event.Arguments[0]
 
-	messages := strings.SplitN(event.Message(), " ", 1)
+	messages := strings.SplitN(event.Message(), " ", 2)
+	fmt.Println(messages)
 	searchString := messages[1]
 
 	result := google.search(searchString)

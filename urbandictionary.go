@@ -22,7 +22,7 @@ func (ud UDCommand) execute(ircobj *irc.Connection, event *irc.Event) {
 	var err error
 
 	messageChannel := event.Arguments[0]
-	messages := strings.SplitN(event.Message(), " ", 2)
+	messages := strings.SplitN(event.Message(), " ", 1)
 	searchString := messages[1]
 
 	targetURL := UrbanDictURL + url.QueryEscape(searchString)

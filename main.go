@@ -9,12 +9,14 @@ import (
 
 var functions = make(map[string]Command)
 
-func handleError(appError error) {
+// IsError generic error handling
+func IsError(appError error) bool {
 	if appError == nil {
-		return
+		return false
 	}
 
 	fmt.Println(appError.Error())
+	return true
 }
 
 func mapCommands() {
@@ -30,7 +32,7 @@ func run(ircobj *irc.Connection, event *irc.Event) {
 	action := parameters[0]
 
 	if command, ok := functions[action]; ok {
-		command.execute(ircobj, event)
+		command.Execute(ircobj, event)
 	}
 }
 

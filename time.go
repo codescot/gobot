@@ -9,7 +9,8 @@ import (
 // TimeCommand server time command
 type TimeCommand struct{}
 
-func (timeCommand TimeCommand) execute(ircobj *irc.Connection, event *irc.Event) {
+// Execute TimeCommand implementation
+func (timeCommand TimeCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
 	messageChannel := event.Arguments[0]
 
 	ircobj.Privmsg(messageChannel, time.Now().Format(time.RFC850))

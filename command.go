@@ -10,13 +10,14 @@ import (
 
 // Command the basic command interface
 type Command interface {
-	execute(ircobj *irc.Connection, event *irc.Event)
+	Execute(ircobj *irc.Connection, event *irc.Event)
 }
 
 // HTTPCommand http command helper methods
 type HTTPCommand struct{}
 
-func (httpCommand HTTPCommand) getJSONResult(targetURL string) ([]byte, error) {
+// JSONResult get a json http request.
+func (httpCommand HTTPCommand) JSONResult(targetURL string) ([]byte, error) {
 	var err error
 	var body []byte
 

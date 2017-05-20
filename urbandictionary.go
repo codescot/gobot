@@ -18,7 +18,8 @@ const UrbanDictURL = "http://www.urbandictionary.com/define.php?term="
 // UDCommand Urban Dictionary command
 type UDCommand struct{}
 
-func (ud UDCommand) execute(ircobj *irc.Connection, event *irc.Event) {
+// Execute UDCommand implementation
+func (ud UDCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
 	var err error
 
 	messageChannel := event.Arguments[0]
@@ -30,7 +31,9 @@ func (ud UDCommand) execute(ircobj *irc.Connection, event *irc.Event) {
 	defer response.Body.Close()
 
 	root, err := html.Parse(response.Body)
-	handleError(err)
+	if IsError(err) {
+		return
+	}
 
 	meanings := scrape.FindAll(root, scrape.ByClass("meaning"))
 	numberOfMeanings := len(meanings)

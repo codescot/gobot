@@ -22,7 +22,9 @@ func loadConfig() Config {
 	config := Config{}
 
 	contents, error := ioutil.ReadFile("./jenna.conf")
-	handleError(error)
+	if IsError(error) {
+		return config
+	}
 
 	json.Unmarshal(contents, &config)
 

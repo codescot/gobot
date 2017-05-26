@@ -21,7 +21,7 @@ var config = loadConfig()
 func loadConfig() Config {
 	config := Config{}
 
-	contents, error := ioutil.ReadFile("./jenna.conf")
+	contents, error := ioutil.ReadFile("./marbles.conf")
 	if IsError(error) {
 		return config
 	}

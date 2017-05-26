@@ -48,7 +48,6 @@ func (google GoogleCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
 	messageChannel := event.Arguments[0]
 
 	messages := strings.SplitN(event.Message(), " ", 2)
-	fmt.Println(messages)
 	searchString := messages[1]
 
 	result, err := google.search(searchString)

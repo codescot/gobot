@@ -24,6 +24,8 @@ func mapCommands() {
 	functions["!time"] = TimeCommand{}
 	functions["!g"] = GoogleCommand{}
 	functions["!ud"] = UDCommand{}
+	functions["!echo"] = EchoCommand{}
+	functions["!spotify"] = SpotifyCommand{}
 }
 
 func run(ircobj *irc.Connection, event *irc.Event) {

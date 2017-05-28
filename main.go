@@ -27,6 +27,11 @@ func mapCommands() {
 	functions["!echo"] = EchoCommand{}
 	functions["!spotify"] = SpotifyCommand{}
 	functions["!yt"] = YoutubeCommand{}
+	functions["!define"] = OxfordDictionaryCommand{}
+
+	ety := OxfordDictionaryCommand{}
+	ety.Etymology = true
+	functions["!ety"] = ety
 }
 
 func run(ircobj *irc.Connection, event *irc.Event) {

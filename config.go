@@ -14,6 +14,9 @@ type Config struct {
 
 	GoogleAPI string `json:"google_api"`
 	GoogleCX  string `json:"google_cx"`
+
+	OxfordID  string `json:"oxford_app_id"`
+	OxfordKey string `json:"oxford_app_key"`
 }
 
 var config = loadConfig()

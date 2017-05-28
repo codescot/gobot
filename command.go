@@ -25,15 +25,19 @@ func (httpCommand HTTPCommand) JSONResult(targetURL string) ([]byte, error) {
 	request.Header.Add("Accept-Encoding", "gzip")
 
 	client := &http.Client{}
-	response, err := client.Do(request) //http.Get(targetURL)
+	response, err := client.Do(request)
 	defer response.Body.Close()
 
-	switch request.Header.Get("Content-Encoding") {
+	contentEncoding := response.Header.Get("Content-Encoding")
+
+	switch contentEncoding {
 	case "gzip":
 		gzipReader, _ := gzip.NewReader(response.Body)
 		body, err = ioutil.ReadAll(gzipReader)
+		break
 	default:
 		body, err = ioutil.ReadAll(response.Body)
+		break
 	}
 
 	return body, err

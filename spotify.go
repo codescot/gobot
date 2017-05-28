@@ -17,26 +17,35 @@ type SpotifyCommand struct{}
 
 // SpotifyResult spotify result implementation
 type SpotifyResult struct {
-	Result []struct {
-		Items []struct {
-			Name         string `json:"name"`
-			ExternalURLS []struct {
-				Spotify string `json:"spotify"`
-			} `json:"external_urls"`
-		} `json:"items"`
-	} `json:"albums" json:"artists" json:"tracks"`
+	Albums  SpotifyInnerResult `json:"albums"`
+	Artists SpotifyInnerResult `json:"artists"`
+	Tracks  SpotifyInnerResult `json:"tracks"`
 }
 
-func (spotify SpotifyCommand) getTargetURL(searchString string) string {
-	return fmt.Sprintf(GoogleURL, config.GoogleAPI, config.GoogleCX, searchString)
+// SpotifyInnerResult inner part of the spotify results
+type SpotifyInnerResult struct {
+	Items []struct {
+		Name         string `json:"name"`
+		ExternalURLS struct {
+			Spotify string `json:"spotify"`
+		} `json:"external_urls"`
+	} `json:"items"`
 }
 
-func (spotify SpotifyCommand) search(searchString string) (SpotifyResult, error) {
+func (spotify SpotifyInnerResult) length() int {
+	return len(spotify.Items)
+}
+
+func (spotify SpotifyCommand) getTargetURL(searchType string, searchString string) string {
+	return fmt.Sprintf(SpotifyURL, searchType, searchString)
+}
+
+func (spotify SpotifyCommand) search(searchType string, searchString string) (SpotifyResult, error) {
 	var err error
 
 	httpCommand := HTTPCommand{}
 	queryString := url.QueryEscape(searchString)
-	targetURL := spotify.getTargetURL(queryString)
+	targetURL := spotify.getTargetURL(searchType, queryString)
 	body, err := httpCommand.JSONResult(targetURL)
 
 	var result SpotifyResult
@@ -53,7 +62,7 @@ func (spotify SpotifyCommand) Execute(ircobj *irc.Connection, event *irc.Event) 
 
 	messages := strings.SplitN(event.Message(), " ", 3)
 	searchType := messages[1]
-	if len(messages) > 1 {
+	if len(messages) > 2 {
 		searchString = messages[2]
 	}
 
@@ -64,21 +73,35 @@ func (spotify SpotifyCommand) Execute(ircobj *irc.Connection, event *irc.Event) 
 		break
 	default:
 		messages = strings.SplitN(event.Message(), " ", 2)
+		searchType = "track"
 		searchString = messages[1]
-		break
 	}
 
-	result, err := spotify.search(searchString)
+	result, err := spotify.search(searchType, searchString)
 	if IsError(err) {
 		ircobj.Privmsg(messageChannel, sender+": (search error).")
 		return
 	}
 
-	resultCount := len(result.Result)
+	var spotifyResults SpotifyInnerResult
+
+	switch searchType {
+	case "album":
+		spotifyResults = result.Albums
+		break
+	case "artist":
+		spotifyResults = result.Artists
+		break
+	case "track":
+		spotifyResults = result.Tracks
+		break
+	}
+
+	resultCount := spotifyResults.length()
 
 	if resultCount > 0 {
-		value := result.Result[0].Items[0]
-		ircobj.Privmsg(messageChannel, value.Name+" - "+value.ExternalURLS[0].Spotify)
+		value := spotifyResults.Items[0]
+		ircobj.Privmsg(messageChannel, value.Name+" - "+value.ExternalURLS.Spotify)
 	} else {
 		ircobj.Privmsg(messageChannel, sender+": No results found.")
 	}

@@ -45,7 +45,7 @@ func ircStart() {
 	ircobj.Password = config.IRCPassword
 
 	ircobj.UseTLS = true
-	ircobj.Debug = true
+	ircobj.Debug = false
 
 	ircobj.AddCallback("001", func(e *irc.Event) {
 		for _, channel := range config.IRCChannels {

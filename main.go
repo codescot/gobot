@@ -26,6 +26,7 @@ func mapCommands() {
 	functions["!ud"] = UDCommand{}
 	functions["!echo"] = EchoCommand{}
 	functions["!spotify"] = SpotifyCommand{}
+	functions["!yt"] = YoutubeCommand{}
 }
 
 func run(ircobj *irc.Connection, event *irc.Event) {

@@ -13,6 +13,9 @@ import (
 // GoogleURL base URL for Google Search
 const GoogleURL = "https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&num=1&fields=items(title,link)&prettyPrint=false&q=%s"
 
+// GoogleResponse base response for Google Search result
+const GoogleResponse = "%s - %s"
+
 // GoogleCommand the Google class
 type GoogleCommand struct{}
 
@@ -60,7 +63,9 @@ func (google GoogleCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
 
 	if resultCount > 0 {
 		value := result.Items[0]
-		ircobj.Privmsg(messageChannel, value.Title+" - "+value.Link)
+		message := fmt.Sprintf(GoogleResponse, value.Title, value.Link)
+
+		ircobj.Privmsg(messageChannel, message)
 	} else {
 		ircobj.Privmsg(messageChannel, sender+": No results found.")
 	}

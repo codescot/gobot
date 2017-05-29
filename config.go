@@ -12,6 +12,9 @@ type Config struct {
 	IRCPassword string   `json:"password"`
 	IRCChannels []string `json:"channels"`
 
+	UseTLS bool `json:"use_tls"`
+	Debug  bool `json:"debug"`
+
 	GoogleAPI string `json:"google_api"`
 	GoogleCX  string `json:"google_cx"`
 

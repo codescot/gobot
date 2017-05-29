@@ -34,7 +34,16 @@ func mapCommands() {
 	functions["!ety"] = ety
 }
 
+// CatchErrors catch all errors and recover.
+func CatchErrors() {
+	if r := recover(); r != nil {
+		fmt.Println(r)
+	}
+}
+
 func run(ircobj *irc.Connection, event *irc.Event) {
+	defer CatchErrors()
+
 	message := event.Message()
 	parameters := strings.Split(message, " ")
 	action := parameters[0]
@@ -50,8 +59,8 @@ func ircStart() {
 	ircobj := irc.IRC(username, username)
 	ircobj.Password = config.IRCPassword
 
-	ircobj.UseTLS = true
-	ircobj.Debug = false
+	ircobj.UseTLS = config.UseTLS
+	ircobj.Debug = config.Debug
 
 	ircobj.AddCallback("001", func(e *irc.Event) {
 		for _, channel := range config.IRCChannels {

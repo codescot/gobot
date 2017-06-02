@@ -4,32 +4,24 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/gurparit/marbles/command"
+	"github.com/gurparit/marbles/util"
 	"github.com/thoj/go-ircevent"
 )
 
-var functions = make(map[string]Command)
-
-// IsError generic error handling
-func IsError(appError error) bool {
-	if appError == nil {
-		return false
-	}
-
-	fmt.Println(appError.Error())
-	return true
-}
+var functions = make(map[string]command.Command)
 
 func mapCommands() {
-	functions["!go"] = HelloCommand{}
-	functions["!time"] = TimeCommand{}
-	functions["!g"] = GoogleCommand{}
-	functions["!ud"] = UDCommand{}
-	functions["!echo"] = EchoCommand{}
-	functions["!spotify"] = SpotifyCommand{}
-	functions["!yt"] = YoutubeCommand{}
-	functions["!define"] = OxfordDictionaryCommand{}
+	functions["!go"] = command.HelloCommand{}
+	functions["!time"] = command.TimeCommand{}
+	functions["!g"] = command.GoogleCommand{}
+	functions["!ud"] = command.UDCommand{}
+	functions["!echo"] = command.EchoCommand{}
+	functions["!spotify"] = command.SpotifyCommand{}
+	functions["!yt"] = command.YoutubeCommand{}
+	functions["!define"] = command.OxfordDictionaryCommand{}
 
-	ety := OxfordDictionaryCommand{}
+	ety := command.OxfordDictionaryCommand{}
 	ety.Etymology = true
 	functions["!ety"] = ety
 }
@@ -54,6 +46,7 @@ func run(ircobj *irc.Connection, event *irc.Event) {
 }
 
 func ircStart() {
+	config := util.Marbles
 	username := config.IRCUsername
 
 	ircobj := irc.IRC(username, username)

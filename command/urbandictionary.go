@@ -1,4 +1,4 @@
-package main
+package command
 
 import (
 	"math/rand"
@@ -7,6 +7,7 @@ import (
 
 	"net/url"
 
+	"github.com/gurparit/marbles/util"
 	irc "github.com/thoj/go-ircevent"
 	"github.com/yhat/scrape"
 	"golang.org/x/net/html"
@@ -31,7 +32,7 @@ func (ud UDCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
 	defer response.Body.Close()
 
 	root, err := html.Parse(response.Body)
-	if IsError(err) {
+	if util.IsError(err) {
 		return
 	}
 

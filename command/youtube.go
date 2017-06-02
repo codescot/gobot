@@ -1,4 +1,4 @@
-package main
+package command
 
 import (
 	"encoding/json"
@@ -7,6 +7,7 @@ import (
 
 	"net/url"
 
+	"github.com/gurparit/marbles/util"
 	irc "github.com/thoj/go-ircevent"
 )
 
@@ -32,7 +33,7 @@ type YoutubeResult struct {
 }
 
 func (youtube YoutubeCommand) getTargetURL(searchString string) string {
-	return fmt.Sprintf(YoutubeURL, config.GoogleAPI, searchString)
+	return fmt.Sprintf(YoutubeURL, util.Marbles.GoogleAPI, searchString)
 }
 
 func (youtube YoutubeCommand) search(searchString string) (YoutubeResult, error) {
@@ -58,7 +59,7 @@ func (youtube YoutubeCommand) Execute(ircobj *irc.Connection, event *irc.Event) 
 	searchString := messages[1]
 
 	result, err := youtube.search(searchString)
-	if IsError(err) {
+	if util.IsError(err) {
 		ircobj.Privmsg(messageChannel, sender+": (search error).")
 		return
 	}

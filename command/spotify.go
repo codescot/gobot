@@ -1,4 +1,4 @@
-package main
+package command
 
 import (
 	"encoding/json"
@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/gurparit/marbles/util"
 	irc "github.com/thoj/go-ircevent"
 )
 
@@ -78,7 +79,7 @@ func (spotify SpotifyCommand) Execute(ircobj *irc.Connection, event *irc.Event) 
 	}
 
 	result, err := spotify.search(searchType, searchString)
-	if IsError(err) {
+	if util.IsError(err) {
 		ircobj.Privmsg(messageChannel, sender+": (search error).")
 		return
 	}

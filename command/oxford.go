@@ -1,4 +1,4 @@
-package main
+package command
 
 import (
 	"encoding/json"
@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/gurparit/marbles/util"
 	irc "github.com/thoj/go-ircevent"
 )
 
@@ -44,8 +45,8 @@ func (oxford OxfordDictionaryCommand) search(searchString string) (OxfordResult,
 	httpCommand := HTTPCommand{}
 	httpCommand.Headers = make(map[string]string)
 	httpCommand.Headers["Accept"] = "application/json"
-	httpCommand.Headers["app_id"] = config.OxfordID
-	httpCommand.Headers["app_key"] = config.OxfordKey
+	httpCommand.Headers["app_id"] = util.Marbles.OxfordID
+	httpCommand.Headers["app_key"] = util.Marbles.OxfordKey
 
 	queryString := url.QueryEscape(searchString)
 	targetURL := oxford.getTargetURL(queryString)
@@ -66,7 +67,7 @@ func (oxford OxfordDictionaryCommand) Execute(ircobj *irc.Connection, event *irc
 	searchString := messages[1]
 
 	result, err := oxford.search(searchString)
-	if IsError(err) {
+	if util.IsError(err) {
 		ircobj.Privmsg(messageChannel, sender+": (search error).")
 		return
 	}

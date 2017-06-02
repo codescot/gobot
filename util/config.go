@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"encoding/json"
@@ -22,7 +22,8 @@ type Config struct {
 	OxfordKey string `json:"oxford_app_key"`
 }
 
-var config = loadConfig()
+// Marbles the configuration
+var Marbles = loadConfig()
 
 func loadConfig() Config {
 	config := Config{}

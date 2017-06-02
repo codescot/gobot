@@ -1,4 +1,4 @@
-package main
+package command
 
 import (
 	"encoding/json"
@@ -7,6 +7,7 @@ import (
 
 	"net/url"
 
+	"github.com/gurparit/marbles/util"
 	irc "github.com/thoj/go-ircevent"
 )
 
@@ -28,7 +29,7 @@ type GoogleResult struct {
 }
 
 func (google GoogleCommand) getTargetURL(searchString string) string {
-	return fmt.Sprintf(GoogleURL, config.GoogleAPI, config.GoogleCX, searchString)
+	return fmt.Sprintf(GoogleURL, util.Marbles.GoogleAPI, util.Marbles.GoogleCX, searchString)
 }
 
 func (google GoogleCommand) search(searchString string) (GoogleResult, error) {
@@ -54,7 +55,7 @@ func (google GoogleCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
 	searchString := messages[1]
 
 	result, err := google.search(searchString)
-	if IsError(err) {
+	if util.IsError(err) {
 		ircobj.Privmsg(messageChannel, sender+": (search error).")
 		return
 	}

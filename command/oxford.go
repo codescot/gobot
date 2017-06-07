@@ -35,6 +35,25 @@ type OxfordResult struct {
 	} `json:"results"`
 }
 
+func (result OxfordResult) hasEtyEntry() bool {
+	isValid := len(result.Results)
+		&& len(result.Results.LexicalEntries) > 0
+		&& len(result.Results.LexicalEntries.Entries) > 0
+		&& len(result.Results.LexicalEntries.Entries.Etymologies) > 0
+	
+	return isValid
+}
+
+func (result OxfordResult) hasDictionaryEntry() bool {
+	isValid := len(result.Results)
+		&& len(result.Results.LexicalEntries) > 0
+		&& len(result.Results.LexicalEntries.Entries) > 0
+		&& len(result.Results.LexicalEntries.Entries.Senses) > 0
+		&& len(result.Results.LexicalEntries.Entries.Senses.Definitions) > 0
+	
+	return isValid
+}
+
 func (oxford OxfordDictionaryCommand) getTargetURL(searchString string) string {
 	return fmt.Sprintf(OxfordDictionaryURL, searchString)
 }
@@ -76,18 +95,19 @@ func (oxford OxfordDictionaryCommand) Execute(ircobj *irc.Connection, event *irc
 
 	if resultCount > 0 {
 		var definition string
-		value := result.Results[0]
 
-		if oxford.Etymology {
-			definition = value.LexicalEntries[0].Entries[0].Etymologies[0]
+		if oxford.Etymology && result.hasEtyEntry() {
+			definition = result.Results[0].LexicalEntries[0].Entries[0].Etymologies[0]
+		} else if result.hasDictionaryEntry() {
+			definition = result.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions[0]
 		} else {
-			definition = value.LexicalEntries[0].Entries[0].Senses[0].Definitions[0]
+			definition = "no results found."
 		}
 
 		message := fmt.Sprintf(OxfordResponse, searchString, definition)
 
 		ircobj.Privmsg(messageChannel, message)
 	} else {
-		ircobj.Privmsg(messageChannel, sender+": No results found.")
+		ircobj.Privmsg(messageChannel, sender+": no results found.")
 	}
 }

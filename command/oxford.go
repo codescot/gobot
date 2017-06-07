@@ -41,10 +41,18 @@ func (oxford OxfordResult) hasEtyEntry() bool {
 	return isValid
 }
 
-func (oxford OxfordResult) hasDictionaryEntry() bool {
+func (oxford OxfordResult) hasDefinitionEntry() bool {
 	isValid := (len(oxford.Results) > 0 && len(oxford.Results[0].LexicalEntries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries[0].Senses) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions) > 0)
 
 	return isValid
+}
+
+func (oxford OxfordResult) getEty() string {
+	return oxford.Results[0].LexicalEntries[0].Entries[0].Etymologies[0]
+}
+
+func (oxford OxfordResult) getDefinition() string {
+	return oxford.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions[0]
 }
 
 func (oxford OxfordDictionaryCommand) getTargetURL(searchString string) string {
@@ -90,9 +98,9 @@ func (oxford OxfordDictionaryCommand) Execute(ircobj *irc.Connection, event *irc
 		var definition string
 
 		if oxford.Etymology && result.hasEtyEntry() {
-			definition = result.Results[0].LexicalEntries[0].Entries[0].Etymologies[0]
-		} else if result.hasDictionaryEntry() {
-			definition = result.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions[0]
+			definition = result.getEty()
+		} else if result.hasDefinitionEntry() {
+			definition = result.getDefinition()
 		} else {
 			definition = "no results found."
 		}

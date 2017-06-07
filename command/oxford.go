@@ -68,7 +68,7 @@ func (oxford OxfordDictionaryCommand) Execute(ircobj *irc.Connection, event *irc
 
 	result, err := oxford.search(searchString)
 	if util.IsError(err) {
-		ircobj.Privmsg(messageChannel, sender+": (search error).")
+		ircobj.Privmsg(messageChannel, sender+": learn to spell, noob!")
 		return
 	}
 

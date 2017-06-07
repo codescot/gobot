@@ -36,7 +36,7 @@ type OxfordResult struct {
 }
 
 func (result OxfordResult) hasEtyEntry() bool {
-	isValid := len(result.Results)
+	isValid := len(result.Results) > 0
 		&& len(result.Results.LexicalEntries) > 0
 		&& len(result.Results.LexicalEntries.Entries) > 0
 		&& len(result.Results.LexicalEntries.Entries.Etymologies) > 0
@@ -45,7 +45,7 @@ func (result OxfordResult) hasEtyEntry() bool {
 }
 
 func (result OxfordResult) hasDictionaryEntry() bool {
-	isValid := len(result.Results)
+	isValid := len(result.Results) > 0
 		&& len(result.Results.LexicalEntries) > 0
 		&& len(result.Results.LexicalEntries.Entries) > 0
 		&& len(result.Results.LexicalEntries.Entries.Senses) > 0

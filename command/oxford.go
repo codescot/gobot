@@ -35,15 +35,15 @@ type OxfordResult struct {
 	} `json:"results"`
 }
 
-func (result OxfordResult) hasEtyEntry() bool {
-	isValid := (len(result.Results) > 0 && len(result.Results.LexicalEntries) > 0 && len(result.Results.LexicalEntries.Entries) > 0 && len(result.Results.LexicalEntries.Entries.Etymologies) > 0)
-	
+func (oxford OxfordResult) hasEtyEntry() bool {
+	isValid := (len(oxford.Results) > 0 && len(oxford.Results[0].LexicalEntries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries[0].Etymologies) > 0)
+
 	return isValid
 }
 
-func (result OxfordResult) hasDictionaryEntry() bool {
-	isValid := (len(result.Results) > 0 && len(result.Results.LexicalEntries) > 0 && len(result.Results.LexicalEntries.Entries) > 0 && len(result.Results.LexicalEntries.Entries.Senses) > 0 && len(result.Results.LexicalEntries.Entries.Senses.Definitions) > 0)
-	
+func (oxford OxfordResult) hasDictionaryEntry() bool {
+	isValid := (len(oxford.Results) > 0 && len(oxford.Results[0].LexicalEntries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries[0].Senses) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions) > 0)
+
 	return isValid
 }
 

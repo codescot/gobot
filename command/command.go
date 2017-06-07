@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/gurparit/marbles/util"
 	irc "github.com/thoj/go-ircevent"
 )
 
@@ -32,6 +33,10 @@ func (httpCommand HTTPCommand) JSONResult(targetURL string) ([]byte, error) {
 
 	client := &http.Client{}
 	response, err := client.Do(request)
+	if util.IsError(err) {
+		return nil, err
+	}
+
 	defer response.Body.Close()
 
 	contentEncoding := response.Header.Get("Content-Encoding")

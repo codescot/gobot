@@ -61,7 +61,10 @@ func ircStart() {
 		}
 	})
 	ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
-		go run(ircobj, event)
+		message := event.Message()
+		if strings.HasPrefix(message, "!") {
+			go run(ircobj, event)
+		}
 	})
 
 	ircobj.Connect(config.IRCServer)

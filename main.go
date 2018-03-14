@@ -6,6 +6,7 @@ import (
 
 	"github.com/gurparit/marbles/command"
 	"github.com/gurparit/marbles/util"
+	"github.com/nlopes/slack"
 	"github.com/thoj/go-ircevent"
 )
 
@@ -47,29 +48,46 @@ func run(ircobj *irc.Connection, event *irc.Event) {
 
 func ircStart() {
 	config := util.Marbles
-	username := config.IRCUsername
 
-	ircobj := irc.IRC(username, username)
-	ircobj.Password = config.IRCPassword
+	api := slack.New(config.SlackToken)
+	rtm := api.NewRTM()
+	go rtm.ManageConnection()
 
-	ircobj.UseTLS = config.UseTLS
-	ircobj.Debug = config.Debug
+	for msg := range rtm.IncomingEvents {
+		switch event := msg.Data.(type) {
+		case *slack.MessageEvent:
+			fmt.Printf("Message: %v\n", event)
 
-	ircobj.AddCallback("001", func(e *irc.Event) {
-		for _, channel := range config.IRCChannels {
-			ircobj.Join(channel)
+			//go run(rtm, event)
+			//rtm.SendMessage(rtm.NewOutgoingMessage("message", "channel_id"))
+			break
+		default:
+			fmt.Printf("Unhandled event type")
 		}
-	})
-	ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
-		message := event.Message()
-		if strings.HasPrefix(message, "!") {
-			go run(ircobj, event)
-		}
-	})
+	}
 
-	ircobj.Connect(config.IRCServer)
-	ircobj.Nick(username)
-	ircobj.Loop()
+	// username := config.IRCUsername
+	// ircobj := irc.IRC(username, username)
+	// ircobj.Password = config.IRCPassword
+
+	// ircobj.UseTLS = config.UseTLS
+	// ircobj.Debug = config.Debug
+
+	// ircobj.AddCallback("001", func(e *irc.Event) {
+	// 	for _, channel := range config.IRCChannels {
+	// 		ircobj.Join(channel)
+	// 	}
+	// })
+	// ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
+	// 	message := event.Message()
+	// 	if strings.HasPrefix(message, "!") {
+	// 		go run(ircobj, event)
+	// 	}
+	// })
+
+	// ircobj.Connect(config.IRCServer)
+	// ircobj.Nick(username)
+	// ircobj.Loop()
 }
 
 func main() {

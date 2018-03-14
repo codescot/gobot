@@ -12,6 +12,8 @@ type Config struct {
 	IRCPassword string   `json:"password"`
 	IRCChannels []string `json:"channels"`
 
+	SlackToken string `json:"slack_token"`
+
 	UseTLS bool `json:"use_tls"`
 	Debug  bool `json:"debug"`
 

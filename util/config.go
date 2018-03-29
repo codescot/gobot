@@ -7,15 +7,9 @@ import (
 
 // Config jenna.conf file.
 type Config struct {
-	IRCServer   string   `json:"server"`
-	IRCUsername string   `json:"username"`
-	IRCPassword string   `json:"password"`
-	IRCChannels []string `json:"channels"`
-
-	SlackToken string `json:"slack_token"`
-
-	UseTLS bool `json:"use_tls"`
-	Debug  bool `json:"debug"`
+	SlackToken string   `json:"slack_token"`
+	Channels   []string `json:"channels"`
+	Debug      bool     `json:"debug"`
 
 	GoogleAPI string `json:"google_api"`
 	GoogleCX  string `json:"google_cx"`

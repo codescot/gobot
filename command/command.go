@@ -6,12 +6,11 @@ import (
 	"net/http"
 
 	"github.com/gurparit/marbles/util"
-	irc "github.com/thoj/go-ircevent"
 )
 
 // Command the basic command interface
 type Command interface {
-	Execute(ircobj *irc.Connection, event *irc.Event)
+	Execute(respond func(string), message string)
 }
 
 // HTTPCommand http command helper methods

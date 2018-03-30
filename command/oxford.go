@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/gurparit/marbles/util"
-	irc "github.com/thoj/go-ircevent"
 )
 
 // OxfordDictionaryURL base Oxford Dictionary API URL
@@ -15,6 +14,8 @@ const OxfordDictionaryURL = "https://od-api.oxforddictionaries.com/api/v1/entrie
 
 // OxfordResponse the default response format
 const OxfordResponse = "%s - %s"
+
+const oxfordStandardResponse = "Oxford Dict.: no results found."
 
 // OxfordDictionaryCommand dictionary command implementation
 type OxfordDictionaryCommand struct {
@@ -79,16 +80,13 @@ func (oxford OxfordDictionaryCommand) search(searchString string) (OxfordResult,
 }
 
 // Execute OxfordDictionaryCommand implementation
-func (oxford OxfordDictionaryCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
-	sender := event.Nick
-	messageChannel := event.Arguments[0]
-
-	messages := strings.SplitN(event.Message(), " ", 2)
+func (oxford OxfordDictionaryCommand) Execute(respond func(string), message string) {
+	messages := strings.SplitN(message, " ", 2)
 	searchString := messages[1]
 
 	result, err := oxford.search(searchString)
 	if util.IsError(err) {
-		ircobj.Privmsg(messageChannel, sender+": learn to spell, noob!")
+		respond("Oxford Dict.: time to upskill that spelling game.")
 		return
 	}
 
@@ -102,13 +100,13 @@ func (oxford OxfordDictionaryCommand) Execute(ircobj *irc.Connection, event *irc
 		} else if result.hasDefinitionEntry() {
 			definition = result.getDefinition()
 		} else {
-			definition = "no results found."
+			definition = oxfordStandardResponse
 		}
 
 		message := fmt.Sprintf(OxfordResponse, searchString, definition)
 
-		ircobj.Privmsg(messageChannel, message)
+		respond(message)
 	} else {
-		ircobj.Privmsg(messageChannel, sender+": no results found.")
+		respond(oxfordStandardResponse)
 	}
 }

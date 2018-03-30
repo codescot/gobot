@@ -8,7 +8,6 @@ import (
 	"net/url"
 
 	"github.com/gurparit/marbles/util"
-	irc "github.com/thoj/go-ircevent"
 )
 
 // YoutubeURL base URL for Youtube Search
@@ -51,16 +50,13 @@ func (youtube YoutubeCommand) search(searchString string) (YoutubeResult, error)
 }
 
 // Execute YoutubeCommand implementation
-func (youtube YoutubeCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
-	sender := event.Nick
-	messageChannel := event.Arguments[0]
-
-	messages := strings.SplitN(event.Message(), " ", 2)
+func (youtube YoutubeCommand) Execute(respond func(string), message string) {
+	messages := strings.SplitN(message, " ", 2)
 	searchString := messages[1]
 
 	result, err := youtube.search(searchString)
 	if util.IsError(err) {
-		ircobj.Privmsg(messageChannel, sender+": (search error).")
+		respond("Youtube: (search error).")
 		return
 	}
 
@@ -70,8 +66,8 @@ func (youtube YoutubeCommand) Execute(ircobj *irc.Connection, event *irc.Event) 
 		value := result.Items[0]
 		message := fmt.Sprintf(YoutubeVideoURL, value.Snippet.Title, value.ID.VideoID)
 
-		ircobj.Privmsg(messageChannel, message)
+		respond(message)
 	} else {
-		ircobj.Privmsg(messageChannel, sender+": No results found.")
+		respond("Youtube: No results found.")
 	}
 }

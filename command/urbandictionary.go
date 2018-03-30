@@ -8,7 +8,6 @@ import (
 	"net/url"
 
 	"github.com/gurparit/marbles/util"
-	irc "github.com/thoj/go-ircevent"
 	"github.com/yhat/scrape"
 	"golang.org/x/net/html"
 )
@@ -20,11 +19,9 @@ const UrbanDictURL = "http://www.urbandictionary.com/define.php?term="
 type UDCommand struct{}
 
 // Execute UDCommand implementation
-func (ud UDCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
+func (ud UDCommand) Execute(respond func(string), message string) {
 	var err error
-
-	messageChannel := event.Arguments[0]
-	messages := strings.SplitN(event.Message(), " ", 2)
+	messages := strings.SplitN(message, " ", 2)
 	searchString := messages[1]
 
 	targetURL := UrbanDictURL + url.QueryEscape(searchString)
@@ -45,5 +42,5 @@ func (ud UDCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
 	randomMeaning := rand.Intn(numberOfMeanings)
 	meaning := scrape.Text(meanings[randomMeaning])
 
-	ircobj.Privmsg(messageChannel, searchString+": "+meaning)
+	respond(searchString + ": " + meaning)
 }

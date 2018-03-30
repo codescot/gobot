@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/gurparit/marbles/util"
-	irc "github.com/thoj/go-ircevent"
 )
 
 // SpotifyURL the base Spotify search URL
@@ -56,12 +55,9 @@ func (spotify SpotifyCommand) search(searchType string, searchString string) (Sp
 }
 
 // Execute spotify search implementation
-func (spotify SpotifyCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
+func (spotify SpotifyCommand) Execute(respond func(string), message string) {
 	searchString := ""
-	sender := event.Nick
-	messageChannel := event.Arguments[0]
-
-	messages := strings.SplitN(event.Message(), " ", 3)
+	messages := strings.SplitN(message, " ", 3)
 	searchType := messages[1]
 	if len(messages) > 2 {
 		searchString = messages[2]
@@ -73,14 +69,14 @@ func (spotify SpotifyCommand) Execute(ircobj *irc.Connection, event *irc.Event) 
 	case "track":
 		break
 	default:
-		messages = strings.SplitN(event.Message(), " ", 2)
+		messages = strings.SplitN(message, " ", 2)
 		searchType = "track"
 		searchString = messages[1]
 	}
 
 	result, err := spotify.search(searchType, searchString)
 	if util.IsError(err) {
-		ircobj.Privmsg(messageChannel, sender+": (search error).")
+		respond("Spotify: (search error).")
 		return
 	}
 
@@ -102,8 +98,8 @@ func (spotify SpotifyCommand) Execute(ircobj *irc.Connection, event *irc.Event) 
 
 	if resultCount > 0 {
 		value := spotifyResults.Items[0]
-		ircobj.Privmsg(messageChannel, value.Name+" - "+value.ExternalURLS.Spotify)
+		respond(value.Name + " - " + value.ExternalURLS.Spotify)
 	} else {
-		ircobj.Privmsg(messageChannel, sender+": No results found.")
+		respond("Spotify: No results found.")
 	}
 }

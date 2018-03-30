@@ -7,7 +7,6 @@ import (
 	"github.com/gurparit/marbles/command"
 	"github.com/gurparit/marbles/util"
 	"github.com/nlopes/slack"
-	"github.com/thoj/go-ircevent"
 )
 
 var functions = make(map[string]command.Command)
@@ -34,35 +33,23 @@ func CatchErrors() {
 	}
 }
 
-func run(ircobj *irc.Connection, event *irc.Event) {
+func run(bot func(string), message string) {
 	defer CatchErrors()
 
-	message := event.Message()
 	parameters := strings.Split(message, " ")
 	action := parameters[0]
 
 	if command, ok := functions[action]; ok {
-		command.Execute(ircobj, event)
+		command.Execute(bot, message)
 	}
 }
 
 func botStart() {
 	config := util.Marbles
+	username := config.Username
 
 	api := slack.New(config.SlackToken)
 	api.SetDebug(config.Debug)
-
-	var channels []*slack.Channel
-	channelsList := config.Channels
-	for _, channel := range channelsList {
-		fmt.Printf("Connecting to channel %s\n", channel)
-		connectedChannel, err := api.JoinChannel(channel)
-		if err == nil {
-			channels = append(channels, connectedChannel)
-		} else {
-			fmt.Printf(err.Error())
-		}
-	}
 
 	rtm := api.NewRTM()
 	go rtm.ManageConnection()
@@ -70,13 +57,15 @@ func botStart() {
 	for msg := range rtm.IncomingEvents {
 		switch event := msg.Data.(type) {
 		case *slack.MessageEvent:
-			fmt.Printf("Message: %v\n", event.Msg.Text)
+			if event.Msg.Username != username {
+				go run(func(response string) {
+					api.PostMessage(event.Msg.Channel, response, slack.NewPostMessageParameters())
+				}, event.Msg.Text)
+			}
 
-			//go run(rtm, event)
-			//rtm.SendMessage(rtm.NewOutgoingMessage("Hello, World.", "channel_id"))
 			break
 		default:
-			fmt.Printf("Unhandled event type: %v\n", event)
+			// do nothing.
 		}
 	}
 }

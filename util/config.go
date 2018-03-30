@@ -7,6 +7,7 @@ import (
 
 // Config jenna.conf file.
 type Config struct {
+	Username   string   `json:"username"`
 	SlackToken string   `json:"slack_token"`
 	Channels   []string `json:"channels"`
 	Debug      bool     `json:"debug"`

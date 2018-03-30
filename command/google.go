@@ -8,7 +8,6 @@ import (
 	"net/url"
 
 	"github.com/gurparit/marbles/util"
-	irc "github.com/thoj/go-ircevent"
 )
 
 // GoogleURL base URL for Google Search
@@ -47,16 +46,13 @@ func (google GoogleCommand) search(searchString string) (GoogleResult, error) {
 }
 
 // Execute GoogleCommand implementation
-func (google GoogleCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
-	sender := event.Nick
-	messageChannel := event.Arguments[0]
-
-	messages := strings.SplitN(event.Message(), " ", 2)
+func (google GoogleCommand) Execute(respond func(string), message string) {
+	messages := strings.SplitN(message, " ", 2)
 	searchString := messages[1]
 
 	result, err := google.search(searchString)
 	if util.IsError(err) {
-		ircobj.Privmsg(messageChannel, sender+": (search error).")
+		respond("Google: (search error).")
 		return
 	}
 
@@ -64,10 +60,10 @@ func (google GoogleCommand) Execute(ircobj *irc.Connection, event *irc.Event) {
 
 	if resultCount > 0 {
 		value := result.Items[0]
-		message := fmt.Sprintf(GoogleResponse, value.Title, value.Link)
+		result := fmt.Sprintf(GoogleResponse, value.Title, value.Link)
 
-		ircobj.Privmsg(messageChannel, message)
+		respond(result)
 	} else {
-		ircobj.Privmsg(messageChannel, sender+": No results found.")
+		respond("No results found.")
 	}
 }

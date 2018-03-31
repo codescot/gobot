@@ -28,7 +28,7 @@ type GoogleResult struct {
 }
 
 func (google GoogleCommand) getTargetURL(searchString string) string {
-	return fmt.Sprintf(GoogleURL, util.Marbles.GoogleAPI, util.Marbles.GoogleCX, searchString)
+	return fmt.Sprintf(GoogleURL, util.Config.GoogleAPI, util.Config.GoogleCX, searchString)
 }
 
 func (google GoogleCommand) search(searchString string) (GoogleResult, error) {

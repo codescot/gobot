@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 )
 
-// Config jenna.conf file.
-type Config struct {
+// ConfigFile marbles.conf file.
+type ConfigFile struct {
 	Username   string   `json:"username"`
 	SlackToken string   `json:"slack_token"`
 	Channels   []string `json:"channels"`
@@ -19,11 +19,11 @@ type Config struct {
 	OxfordKey string `json:"oxford_app_key"`
 }
 
-// Marbles the configuration
-var Marbles = loadConfig()
+// Config the configuration
+var Config = loadConfig()
 
-func loadConfig() Config {
-	config := Config{}
+func loadConfig() ConfigFile {
+	config := ConfigFile{}
 
 	contents, error := ioutil.ReadFile("./marbles.conf")
 	if IsError(error) {

@@ -45,7 +45,7 @@ func run(bot func(string), message string) {
 }
 
 func botStart() {
-	config := util.Marbles
+	config := util.Config
 	username := config.Username
 
 	api := slack.New(config.SlackToken)

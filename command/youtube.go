@@ -32,7 +32,7 @@ type YoutubeResult struct {
 }
 
 func (youtube YoutubeCommand) getTargetURL(searchString string) string {
-	return fmt.Sprintf(YoutubeURL, util.Marbles.GoogleAPI, searchString)
+	return fmt.Sprintf(YoutubeURL, util.Config.GoogleAPI, searchString)
 }
 
 func (youtube YoutubeCommand) search(searchString string) (YoutubeResult, error) {

@@ -66,8 +66,8 @@ func (oxford OxfordDictionaryCommand) search(searchString string) (OxfordResult,
 	httpCommand := HTTPCommand{}
 	httpCommand.Headers = make(map[string]string)
 	httpCommand.Headers["Accept"] = "application/json"
-	httpCommand.Headers["app_id"] = util.Marbles.OxfordID
-	httpCommand.Headers["app_key"] = util.Marbles.OxfordKey
+	httpCommand.Headers["app_id"] = util.Config.OxfordID
+	httpCommand.Headers["app_key"] = util.Config.OxfordKey
 
 	queryString := url.QueryEscape(searchString)
 	targetURL := oxford.getTargetURL(queryString)

@@ -7,7 +7,7 @@ import (
 
 	"net/url"
 
-	"github.com/gurparit/marbles/util"
+	"github.com/gurparit/slackbot/util"
 	"github.com/yhat/scrape"
 	"golang.org/x/net/html"
 )

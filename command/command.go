@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/gurparit/marbles/util"
+	"github.com/gurparit/slackbot/util"
 )
 
 // Command the basic command interface

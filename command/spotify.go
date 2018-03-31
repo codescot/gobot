@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/gurparit/marbles/util"
+	"github.com/gurparit/slackbot/util"
 )
 
 // SpotifyURL the base Spotify search URL

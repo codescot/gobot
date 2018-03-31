@@ -1,5 +1,5 @@
 **/settings.json
 **/launch.json
-**/marbles
+**/slackbot
+**/slackbot.conf
 **/debug
-**/marbles.conf

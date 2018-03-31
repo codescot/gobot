@@ -7,7 +7,7 @@ import (
 
 	"net/url"
 
-	"github.com/gurparit/marbles/util"
+	"github.com/gurparit/slackbot/util"
 )
 
 // GoogleURL base URL for Google Search

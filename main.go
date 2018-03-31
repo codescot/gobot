@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/gurparit/marbles/command"
-	"github.com/gurparit/marbles/util"
+	"github.com/gurparit/slackbot/command"
+	"github.com/gurparit/slackbot/util"
 	"github.com/nlopes/slack"
 )
 

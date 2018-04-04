@@ -64,6 +64,6 @@ func (google GoogleCommand) Execute(respond func(string), message string) {
 
 		respond(result)
 	} else {
-		respond("No results found.")
+		respond("Google: no results found.")
 	}
 }

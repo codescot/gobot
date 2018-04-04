@@ -73,6 +73,6 @@ func (giphy GiphyCommand) Execute(respond func(string), message string) {
 
 		respond(result)
 	} else {
-		respond("No results found.")
+		respond("Giphy: no results found.")
 	}
 }

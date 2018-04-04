@@ -30,12 +30,14 @@ func (ud UDCommand) Execute(respond func(string), message string) {
 
 	root, err := html.Parse(response.Body)
 	if util.IsError(err) {
+		respond("UD: " + err.Error())
 		return
 	}
 
 	meanings := scrape.FindAll(root, scrape.ByClass("meaning"))
 	numberOfMeanings := len(meanings)
 	if numberOfMeanings == 0 {
+		respond("UD: no results found.")
 		return
 	}
 

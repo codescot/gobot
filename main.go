@@ -19,6 +19,7 @@ func mapCommands() {
 	functions["!echo"] = command.EchoCommand{}
 	functions["!spotify"] = command.SpotifyCommand{}
 	functions["!yt"] = command.YoutubeCommand{}
+	functions["!giphy"] = command.GiphyCommand{}
 	functions["!define"] = command.OxfordDictionaryCommand{}
 
 	ety := command.OxfordDictionaryCommand{}

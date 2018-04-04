@@ -15,6 +15,8 @@ type ConfigFile struct {
 	GoogleAPI string `json:"google_api"`
 	GoogleCX  string `json:"google_cx"`
 
+	GiphyAPI string `json:"giphy_api"`
+
 	OxfordID  string `json:"oxford_app_id"`
 	OxfordKey string `json:"oxford_app_key"`
 }

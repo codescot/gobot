@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.10
+      
+    working_directory: /go/src/github.com/gurparit/slackbot
+    steps:
+      - checkout
+
+      - run: go get github.com/nlopes/slack
+      - run: go get github.com/yhat/scrape
+      - run: go get -v -t -d ./...
+      - run: go build

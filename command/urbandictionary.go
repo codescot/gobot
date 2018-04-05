@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"math/rand"
 	"net/http"
 	"strings"
@@ -13,7 +14,7 @@ import (
 )
 
 // UrbanDictURL Urban Dictionary base URL
-const UrbanDictURL = "http://www.urbandictionary.com/define.php?term="
+const UrbanDictURL = "http://www.urbandictionary.com/define.php?term=%s"
 
 // UDCommand Urban Dictionary command
 type UDCommand struct{}
@@ -24,7 +25,9 @@ func (ud UDCommand) Execute(respond func(string), message string) {
 	messages := strings.SplitN(message, " ", 2)
 	searchString := messages[1]
 
-	targetURL := UrbanDictURL + url.QueryEscape(searchString)
+	queryString := url.QueryEscape(searchString)
+	targetURL := fmt.Sprintf(UrbanDictURL, queryString)
+
 	response, err := http.Get(targetURL)
 
 	if err != nil {

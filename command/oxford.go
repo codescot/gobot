@@ -56,10 +56,6 @@ func (oxford OxfordResult) getDefinition() string {
 	return oxford.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions[0]
 }
 
-func (oxford OxfordDictionaryCommand) getTargetURL(searchString string) string {
-	return fmt.Sprintf(OxfordDictionaryURL, searchString)
-}
-
 func (oxford OxfordDictionaryCommand) search(searchString string) (OxfordResult, error) {
 	var err error
 
@@ -70,8 +66,8 @@ func (oxford OxfordDictionaryCommand) search(searchString string) (OxfordResult,
 	httpCommand.Headers["app_key"] = util.Config.OxfordKey
 
 	queryString := url.QueryEscape(searchString)
-	targetURL := oxford.getTargetURL(queryString)
-	body, err := httpCommand.JSONResult(targetURL)
+	targetURL := httpCommand.GetTargetURL(OxfordDictionaryURL, queryString)
+	body, err := httpCommand.GetJSONResult(targetURL)
 
 	var result OxfordResult
 	err = json.Unmarshal(body, &result)

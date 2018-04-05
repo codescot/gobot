@@ -27,17 +27,13 @@ type GoogleResult struct {
 	} `json:"items"`
 }
 
-func (google GoogleCommand) getTargetURL(searchString string) string {
-	return fmt.Sprintf(GoogleURL, util.Config.GoogleAPI, util.Config.GoogleCX, searchString)
-}
-
 func (google GoogleCommand) search(searchString string) (GoogleResult, error) {
 	var err error
 
 	httpCommand := HTTPCommand{}
 	queryString := url.QueryEscape(searchString)
-	targetURL := google.getTargetURL(queryString)
-	body, err := httpCommand.JSONResult(targetURL)
+	targetURL := httpCommand.GetTargetURL(GoogleURL, util.Config.GoogleAPI, util.Config.GoogleCX, queryString)
+	body, err := httpCommand.GetJSONResult(targetURL)
 
 	var result GoogleResult
 	err = json.Unmarshal(body, &result)

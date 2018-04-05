@@ -34,17 +34,13 @@ type GiphyResult struct {
 	} `json:"data"`
 }
 
-func (giphy GiphyCommand) getTargetURL(searchString string) string {
-	return fmt.Sprintf(GiphyURL, util.Config.GiphyAPI, searchString)
-}
-
 func (giphy GiphyCommand) search(searchString string) (GiphyResult, error) {
 	var err error
 
 	httpCommand := HTTPCommand{}
 	queryString := url.QueryEscape(searchString)
-	targetURL := giphy.getTargetURL(queryString)
-	body, err := httpCommand.JSONResult(targetURL)
+	targetURL := httpCommand.GetTargetURL(GiphyURL, util.Config.GiphyAPI, queryString)
+	body, err := httpCommand.GetJSONResult(targetURL)
 
 	var result GiphyResult
 	err = json.Unmarshal(body, &result)

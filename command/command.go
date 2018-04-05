@@ -2,6 +2,7 @@ package command
 
 import (
 	"compress/gzip"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -18,8 +19,13 @@ type HTTPCommand struct {
 	Headers map[string]string
 }
 
-// JSONResult get a json http request.
-func (httpCommand HTTPCommand) JSONResult(targetURL string) ([]byte, error) {
+// GetTargetURL get the target URL
+func (httpCommand HTTPCommand) GetTargetURL(baseURL string, args ...string) string {
+	return fmt.Sprintf(baseURL, args)
+}
+
+// GetJSONResult get a json http request.
+func (httpCommand HTTPCommand) GetJSONResult(targetURL string) ([]byte, error) {
 	var err error
 	var body []byte
 

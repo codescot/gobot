@@ -26,6 +26,12 @@ func (ud UDCommand) Execute(respond func(string), message string) {
 
 	targetURL := UrbanDictURL + url.QueryEscape(searchString)
 	response, err := http.Get(targetURL)
+
+	if err != nil {
+		respond("UD: " + err.Error())
+		return
+	}
+
 	defer response.Body.Close()
 
 	root, err := html.Parse(response.Body)

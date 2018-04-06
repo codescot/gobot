@@ -30,10 +30,11 @@ type GoogleResult struct {
 func (google GoogleCommand) search(searchString string) (GoogleResult, error) {
 	var err error
 
-	httpCommand := HTTPCommand{}
 	queryString := url.QueryEscape(searchString)
-	targetURL := httpCommand.GetTargetURL(GoogleURL, util.Config.GoogleAPI, util.Config.GoogleCX, queryString)
-	body, err := httpCommand.GetJSONResult(targetURL)
+	targetURL := fmt.Sprintf(GoogleURL, util.Config.GoogleAPI, util.Config.GoogleCX, queryString)
+
+	httpCommand := HTTPCommand{URL: targetURL}
+	body, err := httpCommand.Result()
 
 	var result GoogleResult
 	err = json.Unmarshal(body, &result)

@@ -2,7 +2,6 @@ package command
 
 import (
 	"compress/gzip"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -17,19 +16,15 @@ type Command interface {
 // HTTPCommand http command helper methods
 type HTTPCommand struct {
 	Headers map[string]string
+	URL     string
 }
 
-// GetTargetURL get the target URL
-func (httpCommand HTTPCommand) GetTargetURL(baseURL string, args ...string) string {
-	return fmt.Sprintf(baseURL, args)
-}
-
-// GetJSONResult get a json http request.
-func (httpCommand HTTPCommand) GetJSONResult(targetURL string) ([]byte, error) {
+// Result get a json formatted http response.
+func (httpCommand HTTPCommand) Result() ([]byte, error) {
 	var err error
 	var body []byte
 
-	request, err := http.NewRequest("GET", targetURL, nil)
+	request, err := http.NewRequest("GET", httpCommand.URL, nil)
 	request.Header.Add("Accept-Encoding", "gzip")
 
 	for key, value := range httpCommand.Headers {

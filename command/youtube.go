@@ -34,10 +34,11 @@ type YoutubeResult struct {
 func (youtube YoutubeCommand) search(searchString string) (YoutubeResult, error) {
 	var err error
 
-	httpCommand := HTTPCommand{}
 	queryString := url.QueryEscape(searchString)
-	targetURL := httpCommand.GetTargetURL(YoutubeURL, util.Config.GoogleAPI, queryString)
-	body, err := httpCommand.GetJSONResult(targetURL)
+	targetURL := fmt.Sprintf(YoutubeURL, util.Config.GoogleAPI, queryString)
+
+	httpCommand := HTTPCommand{URL: targetURL}
+	body, err := httpCommand.Result()
 
 	var result YoutubeResult
 	err = json.Unmarshal(body, &result)

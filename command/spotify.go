@@ -2,6 +2,7 @@ package command
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/url"
 	"strings"
 
@@ -38,10 +39,11 @@ func (spotify SpotifyInnerResult) length() int {
 func (spotify SpotifyCommand) search(searchType string, searchString string) (SpotifyResult, error) {
 	var err error
 
-	httpCommand := HTTPCommand{}
 	queryString := url.QueryEscape(searchString)
-	targetURL := httpCommand.GetTargetURL(SpotifyURL, searchType, queryString)
-	body, err := httpCommand.GetJSONResult(targetURL)
+	targetURL := fmt.Sprintf(SpotifyURL, searchType, queryString)
+
+	httpCommand := HTTPCommand{URL: targetURL}
+	body, err := httpCommand.Result()
 
 	var result SpotifyResult
 	err = json.Unmarshal(body, &result)

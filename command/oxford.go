@@ -59,15 +59,16 @@ func (oxford OxfordResult) getDefinition() string {
 func (oxford OxfordDictionaryCommand) search(searchString string) (OxfordResult, error) {
 	var err error
 
-	httpCommand := HTTPCommand{}
+	queryString := url.QueryEscape(searchString)
+	targetURL := fmt.Sprintf(OxfordDictionaryURL, queryString)
+
+	httpCommand := HTTPCommand{URL: targetURL}
 	httpCommand.Headers = make(map[string]string)
 	httpCommand.Headers["Accept"] = "application/json"
 	httpCommand.Headers["app_id"] = util.Config.OxfordID
 	httpCommand.Headers["app_key"] = util.Config.OxfordKey
 
-	queryString := url.QueryEscape(searchString)
-	targetURL := httpCommand.GetTargetURL(OxfordDictionaryURL, queryString)
-	body, err := httpCommand.GetJSONResult(targetURL)
+	body, err := httpCommand.Result()
 
 	var result OxfordResult
 	err = json.Unmarshal(body, &result)

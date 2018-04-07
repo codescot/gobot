@@ -10,7 +10,7 @@ import (
 
 // Command the basic command interface
 type Command interface {
-	Execute(respond func(string), message string)
+	Execute(func(string), string)
 }
 
 // HTTPCommand http command helper methods

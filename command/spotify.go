@@ -54,10 +54,10 @@ func (spotify SpotifyCommand) search(searchType string, searchString string) (Sp
 // Execute spotify search implementation
 func (spotify SpotifyCommand) Execute(respond func(string), message string) {
 	searchString := ""
-	messages := strings.SplitN(message, " ", 3)
-	searchType := messages[1]
-	if len(messages) > 2 {
-		searchString = messages[2]
+	messages := strings.SplitN(message, " ", 2)
+	searchType := messages[0]
+	if len(messages) > 1 {
+		searchString = messages[1]
 	}
 
 	switch searchType {

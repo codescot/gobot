@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
-	"strings"
 
 	"github.com/gurparit/slackbot/util"
 )
@@ -77,11 +76,8 @@ func (oxford OxfordDictionaryCommand) search(searchString string) (OxfordResult,
 }
 
 // Execute OxfordDictionaryCommand implementation
-func (oxford OxfordDictionaryCommand) Execute(respond func(string), message string) {
-	messages := strings.SplitN(message, " ", 2)
-	searchString := messages[1]
-
-	result, err := oxford.search(searchString)
+func (oxford OxfordDictionaryCommand) Execute(respond func(string), query string) {
+	result, err := oxford.search(query)
 	if util.IsError(err) {
 		respond("Oxford Dict.: time to upskill that spelling game.")
 		return
@@ -100,7 +96,7 @@ func (oxford OxfordDictionaryCommand) Execute(respond func(string), message stri
 			definition = oxfordStandardResponse
 		}
 
-		message := fmt.Sprintf(OxfordResponse, searchString, definition)
+		message := fmt.Sprintf(OxfordResponse, query, definition)
 
 		respond(message)
 	} else {

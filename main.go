@@ -37,11 +37,12 @@ func CatchErrors() {
 func run(bot func(string), message string) {
 	defer CatchErrors()
 
-	parameters := strings.Split(message, " ")
+	parameters := strings.SplitN(message, " ", 2)
 	action := parameters[0]
+	query := parameters[1]
 
 	if command, ok := functions[action]; ok {
-		command.Execute(bot, message)
+		command.Execute(bot, query)
 	}
 }
 

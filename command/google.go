@@ -3,7 +3,6 @@ package command
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"net/url"
 
@@ -43,11 +42,8 @@ func (google GoogleCommand) search(searchString string) (GoogleResult, error) {
 }
 
 // Execute GoogleCommand implementation
-func (google GoogleCommand) Execute(respond func(string), message string) {
-	messages := strings.SplitN(message, " ", 2)
-	searchString := messages[1]
-
-	result, err := google.search(searchString)
+func (google GoogleCommand) Execute(respond func(string), query string) {
+	result, err := google.search(query)
 	if util.IsError(err) {
 		respond("Google: (search error).")
 		return

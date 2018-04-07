@@ -3,7 +3,6 @@ package command
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	"net/url"
 
@@ -47,11 +46,8 @@ func (youtube YoutubeCommand) search(searchString string) (YoutubeResult, error)
 }
 
 // Execute YoutubeCommand implementation
-func (youtube YoutubeCommand) Execute(respond func(string), message string) {
-	messages := strings.SplitN(message, " ", 2)
-	searchString := messages[1]
-
-	result, err := youtube.search(searchString)
+func (youtube YoutubeCommand) Execute(respond func(string), query string) {
+	result, err := youtube.search(query)
 	if util.IsError(err) {
 		respond("Youtube: (search error).")
 		return

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
-	"strings"
 
 	"net/url"
 
@@ -20,12 +19,10 @@ const UrbanDictURL = "http://www.urbandictionary.com/define.php?term=%s"
 type UDCommand struct{}
 
 // Execute UDCommand implementation
-func (ud UDCommand) Execute(respond func(string), message string) {
+func (ud UDCommand) Execute(respond func(string), query string) {
 	var err error
-	messages := strings.SplitN(message, " ", 2)
-	searchString := messages[1]
 
-	queryString := url.QueryEscape(searchString)
+	queryString := url.QueryEscape(query)
 	targetURL := fmt.Sprintf(UrbanDictURL, queryString)
 
 	response, err := http.Get(targetURL)
@@ -53,5 +50,5 @@ func (ud UDCommand) Execute(respond func(string), message string) {
 	randomMeaning := rand.Intn(numberOfMeanings)
 	meaning := scrape.Text(meanings[randomMeaning])
 
-	respond(searchString + ": " + meaning)
+	respond(query + ": " + meaning)
 }

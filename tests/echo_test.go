@@ -15,5 +15,5 @@ func TestEchoSuccess(test *testing.T) {
 		if response != expectedResponse {
 			test.Errorf("Echo Command Failed: expecting %s but was %s", expectedResponse, response)
 		}
-	}, "!echo Hi, my name is echo.")
+	}, "Hi, my name is echo.")
 }

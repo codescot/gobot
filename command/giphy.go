@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math/rand"
 	"net/url"
-	"strings"
 
 	"github.com/gurparit/slackbot/util"
 )
@@ -50,11 +49,8 @@ func (giphy GiphyCommand) search(searchString string) (GiphyResult, error) {
 }
 
 // Execute GiphyCommand implementation
-func (giphy GiphyCommand) Execute(respond func(string), message string) {
-	messages := strings.SplitN(message, " ", 2)
-	searchString := messages[1]
-
-	result, err := giphy.search(searchString)
+func (giphy GiphyCommand) Execute(respond func(string), query string) {
+	result, err := giphy.search(query)
 	if util.IsError(err) {
 		respond("Giphy: (search error).")
 		return

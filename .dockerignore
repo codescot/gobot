@@ -4,5 +4,6 @@
 **/slackbot.conf
 **/debug
 **/.circleci/
+**/.vscode/
 **/tests/
 **/README.md

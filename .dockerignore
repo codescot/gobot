@@ -1,0 +1,8 @@
+**/settings.json
+**/launch.json
+**/slackbot
+**/slackbot.conf
+**/debug
+**/.circleci/
+**/tests/
+**/README.md

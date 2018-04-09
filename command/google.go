@@ -1,7 +1,6 @@
 package command
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"net/url"
@@ -26,24 +25,17 @@ type GoogleResult struct {
 	} `json:"items"`
 }
 
-func (google GoogleCommand) search(searchString string) (GoogleResult, error) {
-	var err error
-
-	queryString := url.QueryEscape(searchString)
-	targetURL := fmt.Sprintf(GoogleURL, util.Config.GoogleAPI, util.Config.GoogleCX, queryString)
-
-	httpCommand := HTTPCommand{URL: targetURL}
-	body, err := httpCommand.Result()
-
-	var result GoogleResult
-	err = json.Unmarshal(body, &result)
-
-	return result, err
-}
-
 // Execute GoogleCommand implementation
 func (google GoogleCommand) Execute(respond func(string), query string) {
-	result, err := google.search(query)
+	var result GoogleResult
+
+	err := JSON(func() string {
+		queryString := url.QueryEscape(query)
+		targetURL := fmt.Sprintf(GoogleURL, util.Config.GoogleAPI, util.Config.GoogleCX, queryString)
+
+		return targetURL
+	}, &result)
+
 	if util.IsError(err) {
 		respond("Google: (search error).")
 		return

@@ -1,7 +1,6 @@
 package command
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"net/url"
@@ -30,24 +29,17 @@ type YoutubeResult struct {
 	} `json:"items"`
 }
 
-func (youtube YoutubeCommand) search(searchString string) (YoutubeResult, error) {
-	var err error
-
-	queryString := url.QueryEscape(searchString)
-	targetURL := fmt.Sprintf(YoutubeURL, util.Config.GoogleAPI, queryString)
-
-	httpCommand := HTTPCommand{URL: targetURL}
-	body, err := httpCommand.Result()
-
-	var result YoutubeResult
-	err = json.Unmarshal(body, &result)
-
-	return result, err
-}
-
 // Execute YoutubeCommand implementation
 func (youtube YoutubeCommand) Execute(respond func(string), query string) {
-	result, err := youtube.search(query)
+	var result YoutubeResult
+
+	err := JSON(func() string {
+		queryString := url.QueryEscape(query)
+		targetURL := fmt.Sprintf(YoutubeURL, util.Config.GoogleAPI, queryString)
+
+		return targetURL
+	}, &result)
+
 	if util.IsError(err) {
 		respond("Youtube: (search error).")
 		return
@@ -61,6 +53,6 @@ func (youtube YoutubeCommand) Execute(respond func(string), query string) {
 
 		respond(message)
 	} else {
-		respond("Youtube: No results found.")
+		respond("Youtube: no results found.")
 	}
 }

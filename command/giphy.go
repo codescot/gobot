@@ -1,7 +1,6 @@
 package command
 
 import (
-	"encoding/json"
 	"fmt"
 	"math/rand"
 	"net/url"
@@ -33,24 +32,17 @@ type GiphyResult struct {
 	} `json:"data"`
 }
 
-func (giphy GiphyCommand) search(searchString string) (GiphyResult, error) {
-	var err error
-
-	queryString := url.QueryEscape(searchString)
-	targetURL := fmt.Sprintf(GiphyURL, util.Config.GiphyAPI, queryString)
-
-	httpCommand := HTTPCommand{URL: targetURL}
-	body, err := httpCommand.Result()
-
-	var result GiphyResult
-	err = json.Unmarshal(body, &result)
-
-	return result, err
-}
-
 // Execute GiphyCommand implementation
 func (giphy GiphyCommand) Execute(respond func(string), query string) {
-	result, err := giphy.search(query)
+	var result GiphyResult
+
+	err := JSON(func() string {
+		queryString := url.QueryEscape(query)
+		targetURL := fmt.Sprintf(GiphyURL, util.Config.GiphyAPI, queryString)
+
+		return targetURL
+	}, &result)
+
 	if util.IsError(err) {
 		respond("Giphy: (search error).")
 		return

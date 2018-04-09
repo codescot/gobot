@@ -3,52 +3,53 @@ package command
 import (
 	"fmt"
 	"math/rand"
-	"net/http"
 
 	"net/url"
 
 	"github.com/gurparit/slackbot/util"
-	"github.com/yhat/scrape"
-	"golang.org/x/net/html"
 )
 
 // UrbanDictURL Urban Dictionary base URL
-const UrbanDictURL = "http://www.urbandictionary.com/define.php?term=%s"
+const UrbanDictURL = "https://api.urbandictionary.com/v0/define?term=%s"
+
+// UrbanResponse base response for Google Search result
+const UrbanResponse = "%s - %s"
 
 // UDCommand Urban Dictionary command
 type UDCommand struct{}
 
-// Execute UDCommand implementation
+// UrbanResult : sample response {unknown}
+type UrbanResult struct {
+	List []struct {
+		Definition string `json:"definition"`
+	} `json:"list"`
+}
+
+// Execute GoogleCommand implementation
 func (ud UDCommand) Execute(respond func(string), query string) {
-	var err error
+	var result UrbanResult
 
-	queryString := url.QueryEscape(query)
-	targetURL := fmt.Sprintf(UrbanDictURL, queryString)
+	err := JSON(func() string {
+		queryString := url.QueryEscape(query)
+		targetURL := fmt.Sprintf(UrbanDictURL, queryString)
 
-	response, err := http.Get(targetURL)
+		return targetURL
+	}, &result)
 
-	if err != nil {
-		respond("UD: " + err.Error())
-		return
-	}
-
-	defer response.Body.Close()
-
-	root, err := html.Parse(response.Body)
 	if util.IsError(err) {
-		respond("UD: " + err.Error())
+		respond("Google: (search error).")
 		return
 	}
 
-	meanings := scrape.FindAll(root, scrape.ByClass("meaning"))
-	numberOfMeanings := len(meanings)
-	if numberOfMeanings == 0 {
+	resultCount := len(result.List)
+	if resultCount > 0 {
+		randomDefinition := rand.Intn(resultCount)
+		meaning := result.List[randomDefinition]
+
+		result := fmt.Sprintf(UrbanResponse, query, meaning.Definition)
+		respond(result)
+	} else {
 		respond("UD: no results found.")
 		return
 	}
-
-	randomMeaning := rand.Intn(numberOfMeanings)
-	meaning := scrape.Text(meanings[randomMeaning])
-
-	respond(query + ": " + meaning)
 }

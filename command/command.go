@@ -2,6 +2,7 @@ package command
 
 import (
 	"compress/gzip"
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
@@ -52,4 +53,18 @@ func (httpCommand HTTPCommand) Result() ([]byte, error) {
 	}
 
 	return body, err
+}
+
+// JSON makes a json request and returns the result
+func JSON(getURL func() string, result interface{}) error {
+	var err error
+
+	targetURL := getURL()
+
+	httpCommand := HTTPCommand{URL: targetURL}
+	body, err := httpCommand.Result()
+
+	err = json.Unmarshal(body, result)
+
+	return err
 }

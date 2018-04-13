@@ -9,7 +9,7 @@ import (
 )
 
 // GiphyURL base url for API call
-const GiphyURL = "https://api.giphy.com/v1/gifs/search?api_key=%s&q=%s&limit=5&lang=en"
+const GiphyURL = "https://api.giphy.com/v1/gifs/search?api_key=%s&q=%s&limit=1&lang=en"
 
 // GiphyResponse base response for Giphy Search result
 const GiphyResponse = "%s - %s"
@@ -51,9 +51,7 @@ func (giphy GiphyCommand) Execute(respond func(string), query string) {
 	resultCount := len(result.Data)
 
 	if resultCount > 0 {
-		randomGiphy := rand.Intn(resultCount)
-
-		value := result.Data[randomGiphy]
+		value := result.Data[0]
 		result := fmt.Sprintf(GiphyResponse, value.Title, value.Images.Original.URL)
 
 		respond(result)

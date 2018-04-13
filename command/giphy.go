@@ -2,7 +2,6 @@ package command
 
 import (
 	"fmt"
-	"math/rand"
 	"net/url"
 
 	"github.com/gurparit/slackbot/util"

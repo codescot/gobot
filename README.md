@@ -1,6 +1,10 @@
 # slackbot
 Slack Bot written in Golang
 
+# docker build image
+
+> docker build -t slackbot .
+
 # docker set up
 Pull down the latest version using docker
 

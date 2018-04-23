@@ -7,10 +7,11 @@ import (
 
 // ConfigFile slackbot.conf file.
 type ConfigFile struct {
-	Username   string   `json:"username"`
-	SlackToken string   `json:"slack_token"`
-	Channels   []string `json:"channels"`
-	Debug      bool     `json:"debug"`
+	Username     string   `json:"username"`
+	SlackToken   string   `json:"slack_token"`
+	BotUserToken string   `json:"bot_user_token"`
+	Channels     []string `json:"channels"`
+	Debug        bool     `json:"debug"`
 
 	GoogleAPI string `json:"google_api"`
 	GoogleCX  string `json:"google_cx"`

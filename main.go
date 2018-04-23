@@ -54,10 +54,13 @@ func botStart() {
 	config := util.Config
 	username := config.Username
 
-	api := slack.New(config.SlackToken)
-	api.SetDebug(config.Debug)
+	client := slack.New(config.SlackToken)
+	client.SetDebug(config.Debug)
 
-	rtm := api.NewRTM()
+	bot := slack.New(config.BotUserToken)
+	bot.SetDebug(config.Debug)
+
+	rtm := bot.NewRTM()
 	go rtm.ManageConnection()
 
 	for msg := range rtm.IncomingEvents {
@@ -65,8 +68,24 @@ func botStart() {
 		case *slack.MessageEvent:
 			if event.Msg.Username != username {
 				go run(func(response string) {
-					api.PostMessage(event.Msg.Channel, response, slack.NewPostMessageParameters())
+					bot.PostMessage(event.Msg.Channel, response, slack.NewPostMessageParameters())
 				}, event.Msg.Text)
+			}
+
+			break
+		case *slack.ReactionAddedEvent:
+			slackMsg, err := client.GetChannelReplies(event.Item.Channel, event.Item.Timestamp)
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			if len(slackMsg) > 0 && slackMsg[0].Username == username {
+				for _, reaction := range slackMsg[0].Msg.Reactions {
+					if reaction.Name == "-1" && reaction.Count > 2 {
+						rtm.DeleteMessage(event.Item.Channel, event.Item.Timestamp)
+						break
+					}
+				}
 			}
 
 			break

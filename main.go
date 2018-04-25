@@ -21,10 +21,7 @@ func mapCommands() {
 	functions["!yt"] = command.YoutubeCommand{}
 	functions["!gif"] = command.GiphyCommand{}
 	functions["!define"] = command.OxfordDictionaryCommand{}
-
-	ety := command.OxfordDictionaryCommand{}
-	ety.Etymology = true
-	functions["!ety"] = ety
+	functions["!ety"] = command.OxfordDictionaryCommand{Etymology: true}
 }
 
 // CatchErrors catch all errors and recover.

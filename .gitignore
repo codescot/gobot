@@ -1,6 +1,7 @@
 **/.DS_Store
 **/settings.json
 **/launch.json
-**/slackbot
-**/slackbot.conf
+**/config.json
 **/debug
+**/.idea
+slackbot

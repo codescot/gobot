@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 )
 
-// ConfigFile slackbot.conf file.
+// ConfigFile config.json file.
 type ConfigFile struct {
 	Username     string   `json:"username"`
 	SlackToken   string   `json:"slack_token"`
@@ -28,7 +28,7 @@ var Config = loadConfig()
 func loadConfig() ConfigFile {
 	config := ConfigFile{}
 
-	contents, error := ioutil.ReadFile("./slackbot.conf")
+	contents, error := ioutil.ReadFile("./config.json")
 	if IsError(error) {
 		return config
 	}

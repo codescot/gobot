@@ -1,5 +1,5 @@
 # slackbot
-Slack Bot written in Golang
+Slack/IRC Bot written in Golang
 
 # docker build image
 

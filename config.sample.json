@@ -1,8 +1,6 @@
 {
-    "username": "slackbot",
     "slack_token": "slack-token-here",
     "bot_user_token": "bot-user-token-here",
-    "debug": false,
     "google_api": "my-api-key",
     "google_cx": "my-cx-key",
     "giphy_api": "my-giphy-api-key",

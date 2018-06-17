@@ -2,10 +2,13 @@ package command
 
 import (
 	"fmt"
+	"os"
 
 	"net/url"
 
-	"github.com/gurparit/slackbot/util"
+	"github.com/gurparit/gobot/env"
+	"github.com/gurparit/gobot/httpc"
+	"net/http"
 )
 
 // GoogleURL base URL for Google Search
@@ -14,8 +17,8 @@ const GoogleURL = "https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&num=1
 // GoogleResponse base response for Google Search result
 const GoogleResponse = "%s - %s"
 
-// GoogleCommand the Google class
-type GoogleCommand struct{}
+// Google the Google class
+type Google struct{}
 
 // GoogleResult : sample response {"items":[{"title":"Netflix - Watch TV Shows Online, Watch Movies Online","link":"https://www.netflix.com/"}]}
 type GoogleResult struct {
@@ -25,19 +28,23 @@ type GoogleResult struct {
 	} `json:"items"`
 }
 
-// Execute GoogleCommand implementation
-func (google GoogleCommand) Execute(respond func(string), query string) {
+// Execute Google implementation
+func (Google) Execute(r Response, query string) {
+	targetURL := fmt.Sprintf(
+		GoogleURL,
+		os.Getenv(env.GoogleAppID),
+		os.Getenv(env.GoogleApiKey),
+		url.QueryEscape(query),
+	)
+
+	request := httpc.HTTP{
+		TargetURL: targetURL,
+		Method: http.MethodGet,
+	}
+
 	var result GoogleResult
-
-	err := JSON(func() string {
-		queryString := url.QueryEscape(query)
-		targetURL := fmt.Sprintf(GoogleURL, util.Config.GoogleAPI, util.Config.GoogleCX, queryString)
-
-		return targetURL
-	}, &result)
-
-	if util.IsError(err) {
-		respond("Google: (search error).")
+	if err := request.JSON(&result); err != nil {
+		r(fmt.Sprintf("[google] %s", err.Error()))
 		return
 	}
 
@@ -47,8 +54,8 @@ func (google GoogleCommand) Execute(respond func(string), query string) {
 		value := result.Items[0]
 		result := fmt.Sprintf(GoogleResponse, value.Title, value.Link)
 
-		respond(result)
+		r(result)
 	} else {
-		respond("Google: no results found.")
+		r("[google] no results found")
 	}
 }

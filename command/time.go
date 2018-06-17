@@ -4,10 +4,10 @@ import (
 	"time"
 )
 
-// TimeCommand server time command
-type TimeCommand struct{}
+// Time server time command
+type Time struct{}
 
-// Execute TimeCommand implementation
-func (timeCommand TimeCommand) Execute(respond func(string), message string) {
-	respond(time.Now().Format(time.RFC850))
+// Execute Time implementation
+func (Time) Execute(r Response, message string) {
+	r(time.Now().Format(time.RFC850))
 }

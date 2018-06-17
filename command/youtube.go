@@ -2,10 +2,13 @@ package command
 
 import (
 	"fmt"
+	"os"
 
 	"net/url"
 
-	"github.com/gurparit/slackbot/util"
+	"github.com/gurparit/gobot/env"
+	"github.com/gurparit/gobot/httpc"
+	"net/http"
 )
 
 // YoutubeURL base URL for Youtube Search
@@ -14,8 +17,8 @@ const YoutubeURL = "https://www.googleapis.com/youtube/v3/search?part=snippet&ke
 // YoutubeVideoURL base URL for Youtube Videos
 const YoutubeVideoURL = "%s - http://www.youtube.com/watch?v=%s"
 
-// YoutubeCommand the Youtube class
-type YoutubeCommand struct{}
+// Youtube the Youtube class
+type Youtube struct{}
 
 // YoutubeResult : sample response
 type YoutubeResult struct {
@@ -29,19 +32,22 @@ type YoutubeResult struct {
 	} `json:"items"`
 }
 
-// Execute YoutubeCommand implementation
-func (youtube YoutubeCommand) Execute(respond func(string), query string) {
+// Execute Youtube implementation
+func (Youtube) Execute(r Response, query string) {
+	targetURL := fmt.Sprintf(
+		YoutubeURL,
+		os.Getenv(env.GoogleApiKey),
+		url.QueryEscape(query),
+	)
+
+	request := httpc.HTTP{
+		TargetURL: targetURL,
+		Method: http.MethodGet,
+	}
+
 	var result YoutubeResult
-
-	err := JSON(func() string {
-		queryString := url.QueryEscape(query)
-		targetURL := fmt.Sprintf(YoutubeURL, util.Config.GoogleAPI, queryString)
-
-		return targetURL
-	}, &result)
-
-	if util.IsError(err) {
-		respond("Youtube: (search error).")
+	if err := request.JSON(&result); err != nil {
+		r(fmt.Sprintf("[youtube] %s", err.Error()))
 		return
 	}
 
@@ -51,8 +57,8 @@ func (youtube YoutubeCommand) Execute(respond func(string), query string) {
 		value := result.Items[0]
 		message := fmt.Sprintf(YoutubeVideoURL, value.Snippet.Title, value.ID.VideoID)
 
-		respond(message)
+		r(message)
 	} else {
-		respond("Youtube: no results found.")
+		r("[youtube] no results found")
 	}
 }

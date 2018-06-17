@@ -1,11 +1,14 @@
 package command
 
 import (
-	"encoding/json"
+	"os"
 	"fmt"
+
 	"net/url"
 
-	"github.com/gurparit/slackbot/util"
+	"github.com/gurparit/gobot/env"
+	"github.com/gurparit/gobot/httpc"
+	"net/http"
 )
 
 // OxfordDictionaryURL base Oxford Dictionary API URL
@@ -14,10 +17,10 @@ const OxfordDictionaryURL = "https://od-api.oxforddictionaries.com/api/v1/entrie
 // OxfordResponse the default response format
 const OxfordResponse = "%s - %s"
 
-const oxfordStandardResponse = "Oxford Dict.: no results found."
+const oxfordNoResults = "[oxford] no results found"
 
-// OxfordDictionaryCommand dictionary command implementation
-type OxfordDictionaryCommand struct {
+// Oxford dictionary command implementation
+type Oxford struct {
 	Etymology bool
 }
 
@@ -35,51 +38,65 @@ type OxfordResult struct {
 	} `json:"results"`
 }
 
-func (oxford OxfordResult) hasEtyEntry() bool {
-	isValid := (len(oxford.Results) > 0 && len(oxford.Results[0].LexicalEntries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries[0].Etymologies) > 0)
+var oxfordAppID = os.Getenv(env.OxfordAppID)
+var oxfordApiKey = os.Getenv(env.OxfordApiKey)
+
+func (ox OxfordResult) hasEtyEntry() bool {
+	isValid := len(ox.Results) > 0 &&
+		len(ox.Results[0].LexicalEntries) > 0 &&
+		len(ox.Results[0].LexicalEntries[0].Entries) > 0 &&
+		len(ox.Results[0].LexicalEntries[0].Entries[0].Etymologies) > 0
 
 	return isValid
 }
 
-func (oxford OxfordResult) hasDefinitionEntry() bool {
-	isValid := (len(oxford.Results) > 0 && len(oxford.Results[0].LexicalEntries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries[0].Senses) > 0 && len(oxford.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions) > 0)
+func (ox OxfordResult) hasDefinitionEntry() bool {
+	isValid := len(ox.Results) > 0 &&
+		len(ox.Results[0].LexicalEntries) > 0 &&
+		len(ox.Results[0].LexicalEntries[0].Entries) > 0 &&
+		len(ox.Results[0].LexicalEntries[0].Entries[0].Senses) > 0 &&
+		len(ox.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions) > 0
 
 	return isValid
 }
 
-func (oxford OxfordResult) getEty() string {
-	return oxford.Results[0].LexicalEntries[0].Entries[0].Etymologies[0]
+func (ox OxfordResult) getEty() string {
+	return ox.Results[0].LexicalEntries[0].Entries[0].Etymologies[0]
 }
 
-func (oxford OxfordResult) getDefinition() string {
-	return oxford.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions[0]
+func (ox OxfordResult) getDefinition() string {
+	return ox.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions[0]
 }
 
-func (oxford OxfordDictionaryCommand) search(searchString string) (OxfordResult, error) {
-	var err error
+func (ox Oxford) search(searchString string) (OxfordResult, error) {
+	targetURL := fmt.Sprintf(
+		OxfordDictionaryURL,
+		url.QueryEscape(searchString),
+	)
 
-	queryString := url.QueryEscape(searchString)
-	targetURL := fmt.Sprintf(OxfordDictionaryURL, queryString)
+	headers := map[string]string{
+		"Accept": "application/json",
+		"app_id": oxfordAppID,
+		"app_key": oxfordApiKey,
+	}
 
-	httpCommand := HTTPCommand{URL: targetURL}
-	httpCommand.Headers = make(map[string]string)
-	httpCommand.Headers["Accept"] = "application/json"
-	httpCommand.Headers["app_id"] = util.Config.OxfordID
-	httpCommand.Headers["app_key"] = util.Config.OxfordKey
-
-	body, err := httpCommand.Result()
+	request := httpc.HTTP{
+		TargetURL: targetURL,
+		Method: http.MethodGet,
+		Headers: headers,
+	}
 
 	var result OxfordResult
-	err = json.Unmarshal(body, &result)
+	err := request.JSON(&result)
 
 	return result, err
 }
 
-// Execute OxfordDictionaryCommand implementation
-func (oxford OxfordDictionaryCommand) Execute(respond func(string), query string) {
-	result, err := oxford.search(query)
-	if util.IsError(err) {
-		respond("Oxford Dict.: time to upskill that spelling game.")
+// Execute Oxford implementation
+func (ox Oxford) Execute(r Response, query string) {
+	result, err := ox.search(query)
+	if err != nil {
+		r(fmt.Sprintf("[ox] %s", err.Error()))
 		return
 	}
 
@@ -88,18 +105,18 @@ func (oxford OxfordDictionaryCommand) Execute(respond func(string), query string
 	if resultCount > 0 {
 		var definition string
 
-		if oxford.Etymology && result.hasEtyEntry() {
+		if ox.Etymology && result.hasEtyEntry() {
 			definition = result.getEty()
 		} else if result.hasDefinitionEntry() {
 			definition = result.getDefinition()
 		} else {
-			definition = oxfordStandardResponse
+			definition = oxfordNoResults
 		}
 
 		message := fmt.Sprintf(OxfordResponse, query, definition)
 
-		respond(message)
+		r(message)
 	} else {
-		respond(oxfordStandardResponse)
+		r(oxfordNoResults)
 	}
 }

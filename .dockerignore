@@ -1,9 +1,9 @@
 **/settings.json
 **/launch.json
-**/slackbot
-**/slackbot.conf
+**/config.json
 **/debug
 **/.circleci/
 **/.vscode/
 **/tests/
 **/README.md
+gobot

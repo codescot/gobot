@@ -3,11 +3,11 @@ package testing
 import (
 	"testing"
 
-	"github.com/gurparit/slackbot/command"
+	"github.com/gurparit/gobot/command"
 )
 
 func TestEchoSuccess(test *testing.T) {
-	echoCommand := command.EchoCommand{}
+	echoCommand := command.Echo{}
 
 	expectedResponse := "Hi, my name is echo."
 

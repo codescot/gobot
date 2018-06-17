@@ -1,9 +1,9 @@
 package command
 
-// EchoCommand the Echo class
-type EchoCommand struct{}
+// Echo the Echo class
+type Echo struct{}
 
 // Execute Echo implementation
-func (echo EchoCommand) Execute(respond func(string), query string) {
-	respond(query)
+func (Echo) Execute(r Response, query string) {
+	r(query)
 }

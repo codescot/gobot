@@ -4,11 +4,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gurparit/slackbot/command"
+	"github.com/gurparit/gobot/command"
 )
 
 func TestTimeSuccess(test *testing.T) {
-	timeCommand := command.TimeCommand{}
+	timeCommand := command.Time{}
 
 	timeCommand.Execute(func(response string) {
 		if response != time.Now().Format(time.RFC850) {

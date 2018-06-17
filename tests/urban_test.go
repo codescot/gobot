@@ -3,11 +3,11 @@ package testing
 import (
 	"testing"
 
-	"github.com/gurparit/slackbot/command"
+	"github.com/gurparit/gobot/command"
 )
 
 func TestUrbanDictionarySuccess(test *testing.T) {
-	udCommand := command.UDCommand{}
+	udCommand := command.Urban{}
 
 	udCommand.Execute(func(response string) {
 		if response != "tetrible - Portmanteau of [Tetris] and terrible, for when things just don't fit." {

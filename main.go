@@ -1,27 +1,29 @@
 package main
 
 import (
+	"os"
 	"fmt"
+	"flag"
 	"strings"
 
-	"github.com/gurparit/slackbot/command"
-	"github.com/gurparit/slackbot/util"
+	"github.com/gurparit/gobot/command"
+	"github.com/gurparit/gobot/env"
+
 	"github.com/nlopes/slack"
 )
 
 var functions = make(map[string]command.Command)
 
 func mapCommands() {
-	functions["!go"] = command.HelloCommand{}
-	functions["!time"] = command.TimeCommand{}
-	functions["!g"] = command.GoogleCommand{}
-	functions["!ud"] = command.UDCommand{}
-	functions["!echo"] = command.EchoCommand{}
-	functions["!spotify"] = command.SpotifyCommand{}
-	functions["!yt"] = command.YoutubeCommand{}
-	functions["!gif"] = command.GiphyCommand{}
-	functions["!define"] = command.OxfordDictionaryCommand{}
-	functions["!ety"] = command.OxfordDictionaryCommand{Etymology: true}
+	functions["!go"] = command.Hello{}
+	functions["!time"] = command.Time{}
+	functions["!g"] = command.Google{}
+	functions["!ud"] = command.Urban{}
+	functions["!echo"] = command.Echo{}
+	functions["!yt"] = command.Youtube{}
+	functions["!gif"] = command.Giphy{}
+	functions["!define"] = command.Oxford{}
+	functions["!ety"] = command.Oxford{Etymology: true}
 }
 
 // CatchErrors catch all errors and recover.
@@ -48,14 +50,17 @@ func run(bot func(string), message string) {
 }
 
 func botStart() {
-	config := util.Config
-	username := config.Username
+	debug := *flag.Bool("debug", false, "-debug=true")
+	username := *flag.String("username", "gobot", "-username=gobot")
 
-	client := slack.New(config.SlackToken)
-	client.SetDebug(config.Debug)
+	slackUserToken := os.Getenv(env.SlackUserToken)
+	botUserToken := os.Getenv(env.BotUserToken)
 
-	bot := slack.New(config.BotUserToken)
-	bot.SetDebug(config.Debug)
+	client := slack.New(slackUserToken)
+	client.SetDebug(debug)
+
+	bot := slack.New(botUserToken)
+	bot.SetDebug(debug)
 
 	rtm := bot.NewRTM()
 	go rtm.ManageConnection()

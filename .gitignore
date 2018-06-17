@@ -2,6 +2,7 @@
 **/settings.json
 **/launch.json
 **/config.json
+**/env.list
 **/debug
 **/.idea
-slackbot
+gobot

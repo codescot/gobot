@@ -5,8 +5,8 @@ import (
 	"math/rand"
 
 	"net/url"
-
-	"github.com/gurparit/slackbot/util"
+	"github.com/gurparit/gobot/httpc"
+	"net/http"
 )
 
 // UrbanDictURL Urban Dictionary base URL
@@ -15,8 +15,8 @@ const UrbanDictURL = "https://api.urbandictionary.com/v0/define?term=%s"
 // UrbanResponse base response for Google Search result
 const UrbanResponse = "%s - %s"
 
-// UDCommand Urban Dictionary command
-type UDCommand struct{}
+// Urban Urban Dictionary command
+type Urban struct{}
 
 // UrbanResult : sample response {unknown}
 type UrbanResult struct {
@@ -25,19 +25,21 @@ type UrbanResult struct {
 	} `json:"list"`
 }
 
-// Execute GoogleCommand implementation
-func (ud UDCommand) Execute(respond func(string), query string) {
+// Execute Google implementation
+func (Urban) Execute(r Response, query string) {
+	targetURL := fmt.Sprintf(
+		UrbanDictURL,
+		url.QueryEscape(query),
+	)
+
+	request := httpc.HTTP{
+		TargetURL: targetURL,
+		Method: http.MethodGet,
+	}
+
 	var result UrbanResult
-
-	err := JSON(func() string {
-		queryString := url.QueryEscape(query)
-		targetURL := fmt.Sprintf(UrbanDictURL, queryString)
-
-		return targetURL
-	}, &result)
-
-	if util.IsError(err) {
-		respond("Google: (search error).")
+	if err := request.JSON(&result); err != nil {
+		r(fmt.Sprintf("[ud] %s", err.Error()))
 		return
 	}
 
@@ -47,9 +49,9 @@ func (ud UDCommand) Execute(respond func(string), query string) {
 		meaning := result.List[randomDefinition]
 
 		result := fmt.Sprintf(UrbanResponse, query, meaning.Definition)
-		respond(result)
+		r(result)
 	} else {
-		respond("UD: no results found.")
+		r("[ud] no results found")
 		return
 	}
 }

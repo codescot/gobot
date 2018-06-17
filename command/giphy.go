@@ -2,9 +2,13 @@ package command
 
 import (
 	"fmt"
+	"os"
+
 	"net/url"
 
-	"github.com/gurparit/slackbot/util"
+	"github.com/gurparit/gobot/env"
+	"github.com/gurparit/gobot/httpc"
+	"net/http"
 )
 
 // GiphyURL base url for API call
@@ -13,8 +17,8 @@ const GiphyURL = "https://api.giphy.com/v1/gifs/search?api_key=%s&q=%s&limit=1&l
 // GiphyResponse base response for Giphy Search result
 const GiphyResponse = "%s - %s"
 
-// GiphyCommand Giphy API
-type GiphyCommand struct{}
+// Giphy Giphy API
+type Giphy struct{}
 
 // GiphyResult JSON result struct for unmarshalling
 type GiphyResult struct {
@@ -31,19 +35,22 @@ type GiphyResult struct {
 	} `json:"data"`
 }
 
-// Execute GiphyCommand implementation
-func (giphy GiphyCommand) Execute(respond func(string), query string) {
+// Execute Giphy implementation
+func (Giphy) Execute(r Response, query string) {
+	targetURL := fmt.Sprintf(
+		GiphyURL,
+		os.Getenv(env.GiphyApiKey),
+		url.QueryEscape(query),
+	)
+
+	request := httpc.HTTP{
+		TargetURL: targetURL,
+		Method: http.MethodGet,
+	}
+
 	var result GiphyResult
-
-	err := JSON(func() string {
-		queryString := url.QueryEscape(query)
-		targetURL := fmt.Sprintf(GiphyURL, util.Config.GiphyAPI, queryString)
-
-		return targetURL
-	}, &result)
-
-	if util.IsError(err) {
-		respond("Giphy: (search error).")
+	if err := request.JSON(&result); err != nil {
+		r(fmt.Sprintf("[gif] %s", err.Error()))
 		return
 	}
 
@@ -53,8 +60,8 @@ func (giphy GiphyCommand) Execute(respond func(string), query string) {
 		value := result.Data[0]
 		result := fmt.Sprintf(GiphyResponse, value.Title, value.Images.Original.URL)
 
-		respond(result)
+		r(result)
 	} else {
-		respond("Giphy: no results found.")
+		r("[gif] no results found")
 	}
 }

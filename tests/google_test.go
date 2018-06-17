@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gurparit/slackbot/command"
+	"github.com/gurparit/gobot/command"
 )
 
 func TestGoogleSuccess(test *testing.T) {

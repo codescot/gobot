@@ -3,11 +3,11 @@ package testing
 import (
 	"testing"
 
-	"github.com/gurparit/slackbot/command"
+	"github.com/gurparit/gobot/command"
 )
 
 func TestHelloGoSuccess(test *testing.T) {
-	helloCommand := command.HelloCommand{}
+	helloCommand := command.Hello{}
 
 	helloCommand.Execute(func(response string) {
 		if response != "Hello, Go!" {

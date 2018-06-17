@@ -1,9 +1,9 @@
 package command
 
-// HelloCommand hello, world command
-type HelloCommand struct{}
+// Hello hello, world command
+type Hello struct{}
 
-// Execute HelloCommand implementation
-func (hello HelloCommand) Execute(respond func(string), message string) {
-	respond("Hello, Go!")
+// Execute Hello implementation
+func (Hello) Execute(r Response, message string) {
+	r("Hello, Go!")
 }

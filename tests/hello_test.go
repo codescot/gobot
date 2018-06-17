@@ -7,9 +7,9 @@ import (
 )
 
 func TestHelloGoSuccess(test *testing.T) {
-	helloCommand := command.Hello{}
+	h := command.Hello{}
 
-	helloCommand.Execute(func(response string) {
+	h.Execute(func(response string) {
 		if response != "Hello, Go!" {
 			test.Errorf("Hello, Go! Command Failed")
 		}

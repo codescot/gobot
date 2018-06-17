@@ -1,14 +1,14 @@
 package command
 
 import (
-	"os"
 	"fmt"
 
 	"net/url"
 
+	"net/http"
+
 	"github.com/gurparit/gobot/env"
 	"github.com/gurparit/gobot/httpc"
-	"net/http"
 )
 
 // OxfordDictionaryURL base Oxford Dictionary API URL
@@ -37,9 +37,6 @@ type OxfordResult struct {
 		} `json:"lexicalEntries"`
 	} `json:"results"`
 }
-
-var oxfordAppID = os.Getenv(env.OxfordAppID)
-var oxfordApiKey = os.Getenv(env.OxfordApiKey)
 
 func (ox OxfordResult) hasEtyEntry() bool {
 	isValid := len(ox.Results) > 0 &&
@@ -75,15 +72,15 @@ func (ox Oxford) search(searchString string) (OxfordResult, error) {
 	)
 
 	headers := map[string]string{
-		"Accept": "application/json",
-		"app_id": oxfordAppID,
-		"app_key": oxfordApiKey,
+		"Accept":  "application/json",
+		"app_id":  env.OS.OxfordAppID,
+		"app_key": env.OS.OxfordKey,
 	}
 
 	request := httpc.HTTP{
 		TargetURL: targetURL,
-		Method: http.MethodGet,
-		Headers: headers,
+		Method:    http.MethodGet,
+		Headers:   headers,
 	}
 
 	var result OxfordResult

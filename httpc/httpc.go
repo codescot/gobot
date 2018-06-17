@@ -1,18 +1,18 @@
 package httpc
 
 import (
-	"net/http"
 	"compress/gzip"
-	"io/ioutil"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"strings"
-	"fmt"
-	"errors"
 )
 
-type URL func()string
+type URL func() string
 
 type HTTP struct {
 	TargetURL string

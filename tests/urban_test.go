@@ -7,9 +7,9 @@ import (
 )
 
 func TestUrbanDictionarySuccess(test *testing.T) {
-	udCommand := command.Urban{}
+	u := command.Urban{}
 
-	udCommand.Execute(func(response string) {
+	u.Execute(func(response string) {
 		if response != "tetrible - Portmanteau of [Tetris] and terrible, for when things just don't fit." {
 			test.Errorf("UD Command Failed")
 		}

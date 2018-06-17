@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"math/rand"
 
-	"net/url"
-	"github.com/gurparit/gobot/httpc"
 	"net/http"
+	"net/url"
+
+	"github.com/gurparit/gobot/httpc"
 )
 
 // UrbanDictURL Urban Dictionary base URL
@@ -34,7 +35,7 @@ func (Urban) Execute(r Response, query string) {
 
 	request := httpc.HTTP{
 		TargetURL: targetURL,
-		Method: http.MethodGet,
+		Method:    http.MethodGet,
 	}
 
 	var result UrbanResult

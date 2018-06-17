@@ -2,13 +2,12 @@ package command
 
 import (
 	"fmt"
-	"os"
-
 	"net/url"
+
+	"net/http"
 
 	"github.com/gurparit/gobot/env"
 	"github.com/gurparit/gobot/httpc"
-	"net/http"
 )
 
 // YoutubeURL base URL for Youtube Search
@@ -36,13 +35,13 @@ type YoutubeResult struct {
 func (Youtube) Execute(r Response, query string) {
 	targetURL := fmt.Sprintf(
 		YoutubeURL,
-		os.Getenv(env.GoogleApiKey),
+		env.OS.GoogleKey,
 		url.QueryEscape(query),
 	)
 
 	request := httpc.HTTP{
 		TargetURL: targetURL,
-		Method: http.MethodGet,
+		Method:    http.MethodGet,
 	}
 
 	var result YoutubeResult

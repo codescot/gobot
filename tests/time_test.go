@@ -8,9 +8,9 @@ import (
 )
 
 func TestTimeSuccess(test *testing.T) {
-	timeCommand := command.Time{}
+	t := command.Time{}
 
-	timeCommand.Execute(func(response string) {
+	t.Execute(func(response string) {
 		if response != time.Now().Format(time.RFC850) {
 			test.Errorf("Time Command Failed")
 		}

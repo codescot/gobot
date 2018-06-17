@@ -2,13 +2,12 @@ package command
 
 import (
 	"fmt"
-	"os"
-
 	"net/url"
+
+	"net/http"
 
 	"github.com/gurparit/gobot/env"
 	"github.com/gurparit/gobot/httpc"
-	"net/http"
 )
 
 // GiphyURL base url for API call
@@ -39,13 +38,13 @@ type GiphyResult struct {
 func (Giphy) Execute(r Response, query string) {
 	targetURL := fmt.Sprintf(
 		GiphyURL,
-		os.Getenv(env.GiphyApiKey),
+		env.OS.GiphyKey,
 		url.QueryEscape(query),
 	)
 
 	request := httpc.HTTP{
 		TargetURL: targetURL,
-		Method: http.MethodGet,
+		Method:    http.MethodGet,
 	}
 
 	var result GiphyResult

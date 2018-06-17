@@ -2,13 +2,12 @@ package command
 
 import (
 	"fmt"
-	"os"
-
 	"net/url"
+
+	"net/http"
 
 	"github.com/gurparit/gobot/env"
 	"github.com/gurparit/gobot/httpc"
-	"net/http"
 )
 
 // GoogleURL base URL for Google Search
@@ -32,14 +31,14 @@ type GoogleResult struct {
 func (Google) Execute(r Response, query string) {
 	targetURL := fmt.Sprintf(
 		GoogleURL,
-		os.Getenv(env.GoogleApiKey),
-		os.Getenv(env.GoogleAppID),
+		env.OS.GoogleKey,
+		env.OS.GoogleSearchID,
 		url.QueryEscape(query),
 	)
 
 	request := httpc.HTTP{
 		TargetURL: targetURL,
-		Method: http.MethodGet,
+		Method:    http.MethodGet,
 	}
 
 	var result GoogleResult

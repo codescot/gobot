@@ -1,14 +1,12 @@
 package main
 
 import (
-	"os"
-	"fmt"
 	"flag"
+	"fmt"
 	"strings"
 
 	"github.com/gurparit/gobot/command"
 	"github.com/gurparit/gobot/env"
-
 	"github.com/nlopes/slack"
 )
 
@@ -49,17 +47,11 @@ func run(bot func(string), message string) {
 	}
 }
 
-func botStart() {
-	debug := *flag.Bool("debug", false, "-debug=true")
-	username := *flag.String("username", "gobot", "-username=gobot")
-
-	slackUserToken := os.Getenv(env.SlackUserToken)
-	botUserToken := os.Getenv(env.BotUserToken)
-
-	client := slack.New(slackUserToken)
+func botStart(debug bool, username string) {
+	client := slack.New(env.OS.Slack)
 	client.SetDebug(debug)
 
-	bot := slack.New(botUserToken)
+	bot := slack.New(env.OS.Bot)
 	bot.SetDebug(debug)
 
 	rtm := bot.NewRTM()
@@ -73,14 +65,12 @@ func botStart() {
 					bot.PostMessage(event.Msg.Channel, response, slack.NewPostMessageParameters())
 				}, event.Msg.Text)
 			}
-
 			break
 		case *slack.ReactionAddedEvent:
 			slackMsg, err := client.GetChannelReplies(event.Item.Channel, event.Item.Timestamp)
 			if err != nil {
 				fmt.Println(err)
 			}
-
 			if len(slackMsg) > 0 && slackMsg[0].Username == username {
 				for _, reaction := range slackMsg[0].Msg.Reactions {
 					if reaction.Name == "-1" && reaction.Count > 2 {
@@ -89,7 +79,6 @@ func botStart() {
 					}
 				}
 			}
-
 			break
 		default:
 			// do nothing.
@@ -98,6 +87,11 @@ func botStart() {
 }
 
 func main() {
+	debug := *flag.Bool("debug", false, "-debug=true")
+	username := *flag.String("username", "gobot", "-username=gobot")
+
+	env.OS = env.LoadConfig()
+
 	mapCommands()
-	botStart()
+	botStart(debug, username)
 }

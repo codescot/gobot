@@ -7,11 +7,11 @@ import (
 )
 
 func TestEchoSuccess(test *testing.T) {
-	echoCommand := command.Echo{}
+	e := command.Echo{}
 
 	expectedResponse := "Hi, my name is echo."
 
-	echoCommand.Execute(func(response string) {
+	e.Execute(func(response string) {
 		if response != expectedResponse {
 			test.Errorf("Echo Command Failed: expecting %s but was %s", expectedResponse, response)
 		}

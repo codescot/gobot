@@ -10,5 +10,5 @@ jobs:
 
       - run: go get github.com/nlopes/slack
       - run: go get -v -t -d ./...
-      - run: go test -v ./tests/
+      - run: go test -v ./test/
       - run: go build

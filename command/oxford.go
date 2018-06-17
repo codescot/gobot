@@ -11,20 +11,14 @@ import (
 	"github.com/gurparit/gobot/httpc"
 )
 
-// OxfordDictionaryURL base Oxford Dictionary API URL
-const OxfordDictionaryURL = "https://od-api.oxforddictionaries.com/api/v1/entries/en/%s"
-
-// OxfordResponse the default response format
 const OxfordResponse = "%s - %s"
 
 const oxfordNoResults = "[oxford] no results found"
 
-// Oxford dictionary command implementation
 type Oxford struct {
 	Etymology bool
 }
 
-// OxfordResult oxford dictionary result
 type OxfordResult struct {
 	Results []struct {
 		LexicalEntries []struct {
@@ -66,8 +60,8 @@ func (ox OxfordResult) getDefinition() string {
 }
 
 func (ox Oxford) search(searchString string) (OxfordResult, error) {
-	targetURL := fmt.Sprintf(
-		OxfordDictionaryURL,
+	targetURL := FormatURL(
+		env.OS.OxfordURL,
 		url.QueryEscape(searchString),
 	)
 
@@ -89,7 +83,6 @@ func (ox Oxford) search(searchString string) (OxfordResult, error) {
 	return result, err
 }
 
-// Execute Oxford implementation
 func (ox Oxford) Execute(r Response, query string) {
 	result, err := ox.search(query)
 	if err != nil {

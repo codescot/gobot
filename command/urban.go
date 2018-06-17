@@ -7,29 +7,23 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/gurparit/gobot/env"
 	"github.com/gurparit/gobot/httpc"
 )
 
-// UrbanDictURL Urban Dictionary base URL
-const UrbanDictURL = "https://api.urbandictionary.com/v0/define?term=%s"
-
-// UrbanResponse base response for Google Search result
 const UrbanResponse = "%s - %s"
 
-// Urban Urban Dictionary command
 type Urban struct{}
 
-// UrbanResult : sample response {unknown}
 type UrbanResult struct {
 	List []struct {
 		Definition string `json:"definition"`
 	} `json:"list"`
 }
 
-// Execute Google implementation
 func (Urban) Execute(r Response, query string) {
-	targetURL := fmt.Sprintf(
-		UrbanDictURL,
+	targetURL := FormatURL(
+		env.OS.UrbanURL,
 		url.QueryEscape(query),
 	)
 

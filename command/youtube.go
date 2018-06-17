@@ -10,16 +10,10 @@ import (
 	"github.com/gurparit/gobot/httpc"
 )
 
-// YoutubeURL base URL for Youtube Search
-const YoutubeURL = "https://www.googleapis.com/youtube/v3/search?part=snippet&key=%s&maxResults=1&type=video&q=%s"
-
-// YoutubeVideoURL base URL for Youtube Videos
 const YoutubeVideoURL = "%s - http://www.youtube.com/watch?v=%s"
 
-// Youtube the Youtube class
 type Youtube struct{}
 
-// YoutubeResult : sample response
 type YoutubeResult struct {
 	Items []struct {
 		Snippet struct {
@@ -31,10 +25,9 @@ type YoutubeResult struct {
 	} `json:"items"`
 }
 
-// Execute Youtube implementation
 func (Youtube) Execute(r Response, query string) {
-	targetURL := fmt.Sprintf(
-		YoutubeURL,
+	targetURL := FormatURL(
+		env.OS.YoutubeURL,
 		env.OS.GoogleKey,
 		url.QueryEscape(query),
 	)

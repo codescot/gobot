@@ -10,9 +10,6 @@ import (
 	"github.com/gurparit/gobot/httpc"
 )
 
-// GiphyURL base url for API call
-const GiphyURL = "https://api.giphy.com/v1/gifs/search?api_key=%s&q=%s&limit=1&lang=en"
-
 // GiphyResponse base response for Giphy Search result
 const GiphyResponse = "%s - %s"
 
@@ -36,8 +33,8 @@ type GiphyResult struct {
 
 // Execute Giphy implementation
 func (Giphy) Execute(r Response, query string) {
-	targetURL := fmt.Sprintf(
-		GiphyURL,
+	targetURL := FormatURL(
+		env.OS.GiphyURL,
 		env.OS.GiphyKey,
 		url.QueryEscape(query),
 	)

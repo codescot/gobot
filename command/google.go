@@ -10,13 +10,8 @@ import (
 	"github.com/gurparit/gobot/httpc"
 )
 
-// GoogleURL base URL for Google Search
-const GoogleURL = "https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&num=1&fields=items(title,link)&prettyPrint=false&q=%s"
-
-// GoogleResponse base response for Google Search result
 const GoogleResponse = "%s - %s"
 
-// Google the Google class
 type Google struct{}
 
 // GoogleResult : sample response {"items":[{"title":"Netflix - Watch TV Shows Online, Watch Movies Online","link":"https://www.netflix.com/"}]}
@@ -29,8 +24,8 @@ type GoogleResult struct {
 
 // Execute Google implementation
 func (Google) Execute(r Response, query string) {
-	targetURL := fmt.Sprintf(
-		GoogleURL,
+	targetURL := FormatURL(
+		env.OS.GoogleURL,
 		env.OS.GoogleKey,
 		env.OS.GoogleSearchID,
 		url.QueryEscape(query),

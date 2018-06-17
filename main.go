@@ -98,12 +98,6 @@ func botStart() {
 }
 
 func main() {
-	appID := os.Getenv(env.GoogleAppID)
-	appKey := os.Getenv(env.GoogleApiKey)
-
-	fmt.Println(appID)
-	fmt.Println(appKey)
-
 	mapCommands()
 	botStart()
 }

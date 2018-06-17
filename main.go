@@ -34,12 +34,12 @@ func CatchErrors() {
 func run(bot func(string), message string) {
 	defer CatchErrors()
 
-	parameters := strings.SplitN(message, " ", 2)
-	action := parameters[0]
+	params := strings.SplitN(message, " ", 2)
+	action := params[0]
 	query := ""
 
-	if len(parameters) > 1 {
-		query = parameters[1]
+	if len(params) > 1 {
+		query = params[1]
 	}
 
 	if command, ok := functions[action]; ok {

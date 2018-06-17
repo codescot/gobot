@@ -1,9 +1,0 @@
-{
-    "slack_token": "slack-token-here",
-    "bot_user_token": "bot-user-token-here",
-    "google_api": "my-api-key",
-    "google_cx": "my-cx-key",
-    "giphy_api": "my-giphy-api-key",
-    "oxford_app_id": "my-app-id",
-    "oxford_app_key": "my-app-key"
-}

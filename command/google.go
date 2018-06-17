@@ -32,8 +32,8 @@ type GoogleResult struct {
 func (Google) Execute(r Response, query string) {
 	targetURL := fmt.Sprintf(
 		GoogleURL,
-		os.Getenv(env.GoogleAppID),
 		os.Getenv(env.GoogleApiKey),
+		os.Getenv(env.GoogleAppID),
 		url.QueryEscape(query),
 	)
 

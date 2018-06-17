@@ -1,5 +1,5 @@
 # gobot
-Slack/IRC Bot written in Golang
+Slack Bot written in Golang (soon to be irc again)
 
 # docker build image
 
@@ -12,6 +12,6 @@ Pull down the latest version using docker
 
 Run docker image with
 
-> docker run -d -env-file /path/to/env.list --restart=always --name slackbot gurparit/gobot
+> docker run -d -env-file /path/to/env.list --restart=always --name gobot gurparit/gobot
 
 You may need to run the docker commands with sudo.

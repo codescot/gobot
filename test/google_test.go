@@ -11,7 +11,7 @@ import (
 )
 
 func TestGoogleRequest(t *testing.T) {
-	var sample = `
+	sampleGoogle := `
 {
 	"items": [
 		{
@@ -24,7 +24,7 @@ func TestGoogleRequest(t *testing.T) {
 
 	testHttp := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(sample))
+		w.Write([]byte(sampleGoogle))
 	}))
 
 	defer testHttp.Close()

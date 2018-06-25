@@ -1,9 +1,7 @@
-FROM golang:latest
+FROM golang:alpine
 
-WORKDIR /go/src/app
-COPY . .
+WORKDIR /go/app
 
-RUN go get -d -v ./...
-RUN go install -v
+ADD gobot /go/app
 
-CMD ["app"]
+CMD ["./gobot"]

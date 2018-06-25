@@ -1,7 +1,7 @@
-FROM golang:latest
+FROM golang:alpine
 
-RUN go get -d -v ./...
-RUN go install -v
+#RUN go get -d -v ./...
+#RUN go install -v
 
 WORKDIR /go/src/app
 COPY . .

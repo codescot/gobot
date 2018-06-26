@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/gurparit/go-common/env"
 	"github.com/gurparit/gobot/command"
-	"github.com/gurparit/gobot/env"
 )
 
 func TestYoutubeRequest(t *testing.T) {
@@ -34,7 +34,7 @@ func TestYoutubeRequest(t *testing.T) {
 	defer testHttp.Close()
 
 	os.Setenv("YOUTUBE_SEARCH_URL", testHttp.URL)
-	env.OS = env.OpenConfig()
+	env.Read(&command.OS)
 
 	youtube := command.Youtube{}
 	youtube.Execute(func(response string) {

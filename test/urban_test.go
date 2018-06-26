@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"github.com/gurparit/go-common/env"
 	"github.com/gurparit/gobot/command"
-	"github.com/gurparit/gobot/env"
 )
 
 func TestUrbanDictionarySuccess(t *testing.T) {
@@ -31,7 +31,7 @@ func TestUrbanDictionarySuccess(t *testing.T) {
 	defer testHttp.Close()
 
 	os.Setenv("URBAN_URL", testHttp.URL)
-	env.OS = env.OpenConfig()
+	env.Read(&command.OS)
 
 	urban := command.Urban{}
 	urban.Execute(func(response string) {

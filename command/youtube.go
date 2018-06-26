@@ -6,8 +6,7 @@ import (
 
 	"net/http"
 
-	"github.com/gurparit/gobot/env"
-	"github.com/gurparit/gobot/httpc"
+	"github.com/gurparit/go-common/httpc"
 )
 
 const YoutubeVideoURL = "%s - http://www.youtube.com/watch?v=%s"
@@ -27,8 +26,8 @@ type YoutubeResult struct {
 
 func (Youtube) Execute(r Response, query string) {
 	targetURL := FormatURL(
-		env.OS.YoutubeURL,
-		env.OS.GoogleKey,
+		OS.YoutubeURL,
+		OS.GoogleKey,
 		url.QueryEscape(query),
 	)
 

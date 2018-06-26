@@ -6,8 +6,7 @@ import (
 
 	"net/http"
 
-	"github.com/gurparit/gobot/env"
-	"github.com/gurparit/gobot/httpc"
+	"github.com/gurparit/go-common/httpc"
 )
 
 // GiphyResponse base response for Giphy Search result
@@ -34,8 +33,8 @@ type GiphyResult struct {
 // Execute Giphy implementation
 func (Giphy) Execute(r Response, query string) {
 	targetURL := FormatURL(
-		env.OS.GiphyURL,
-		env.OS.GiphyKey,
+		OS.GiphyURL,
+		OS.GiphyKey,
 		url.QueryEscape(query),
 	)
 

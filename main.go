@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/gurparit/go-common/env"
 	"github.com/gurparit/gobot/command"
-	"github.com/gurparit/gobot/env"
 	"github.com/nlopes/slack"
 )
 
@@ -42,16 +42,16 @@ func run(bot func(string), message string) {
 		query = params[1]
 	}
 
-	if command, ok := functions[action]; ok {
-		command.Execute(bot, query)
+	if c, ok := functions[action]; ok {
+		c.Execute(bot, query)
 	}
 }
 
 func botStart(debug bool, username string) {
-	client := slack.New(env.OS.Slack)
+	client := slack.New(command.OS.Slack)
 	client.SetDebug(debug)
 
-	bot := slack.New(env.OS.Bot)
+	bot := slack.New(command.OS.Bot)
 	bot.SetDebug(debug)
 
 	rtm := bot.NewRTM()
@@ -90,7 +90,7 @@ func main() {
 	debug := *flag.Bool("debug", false, "-debug=true")
 	username := *flag.String("username", "gobot", "-username=gobot")
 
-	env.OS = env.OpenConfig()
+	env.Read(&command.OS)
 
 	mapCommands()
 	botStart(debug, username)

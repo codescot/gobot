@@ -6,8 +6,7 @@ import (
 
 	"net/http"
 
-	"github.com/gurparit/gobot/env"
-	"github.com/gurparit/gobot/httpc"
+	"github.com/gurparit/go-common/httpc"
 )
 
 const GoogleResponse = "%s - %s"
@@ -25,9 +24,9 @@ type GoogleResult struct {
 // Execute Google implementation
 func (Google) Execute(r Response, query string) {
 	targetURL := FormatURL(
-		env.OS.GoogleURL,
-		env.OS.GoogleKey,
-		env.OS.GoogleSearchID,
+		OS.GoogleURL,
+		OS.GoogleKey,
+		OS.GoogleSearchID,
 		url.QueryEscape(query),
 	)
 

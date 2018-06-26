@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+var OS Environment
+
 type Response func(string)
 
 type Command interface {

@@ -7,8 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/gurparit/gobot/env"
-	"github.com/gurparit/gobot/httpc"
+	"github.com/gurparit/go-common/httpc"
 )
 
 const UrbanResponse = "%s - %s"
@@ -23,7 +22,7 @@ type UrbanResult struct {
 
 func (Urban) Execute(r Response, query string) {
 	targetURL := FormatURL(
-		env.OS.UrbanURL,
+		OS.UrbanURL,
 		url.QueryEscape(query),
 	)
 

@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/gurparit/go-common/env"
 	"github.com/gurparit/gobot/command"
-	"github.com/gurparit/gobot/env"
 )
 
 func TestGoogleRequest(t *testing.T) {
@@ -30,7 +30,7 @@ func TestGoogleRequest(t *testing.T) {
 	defer testHttp.Close()
 
 	os.Setenv("GOOGLE_SEARCH_URL", testHttp.URL)
-	env.OS = env.OpenConfig()
+	env.Read(&command.OS)
 
 	google := command.Google{}
 	google.Execute(func(response string) {

@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"github.com/gurparit/go-common/env"
 	"github.com/gurparit/gobot/command"
-	"github.com/gurparit/gobot/env"
 )
 
 func TestGiphySuccess(t *testing.T) {
@@ -37,7 +37,7 @@ func TestGiphySuccess(t *testing.T) {
 	}))
 
 	os.Setenv("GIPHY_URL", testHttp.URL)
-	env.OS = env.OpenConfig()
+	env.Read(&command.OS)
 
 	gif := command.Giphy{}
 

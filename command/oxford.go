@@ -7,8 +7,7 @@ import (
 
 	"net/http"
 
-	"github.com/gurparit/gobot/env"
-	"github.com/gurparit/gobot/httpc"
+	"github.com/gurparit/go-common/httpc"
 )
 
 const OxfordResponse = "%s - %s"
@@ -61,14 +60,14 @@ func (ox OxfordResult) getDefinition() string {
 
 func (ox Oxford) search(searchString string) (OxfordResult, error) {
 	targetURL := FormatURL(
-		env.OS.OxfordURL,
+		OS.OxfordURL,
 		url.QueryEscape(searchString),
 	)
 
 	headers := map[string]string{
 		"Accept":  "application/json",
-		"app_id":  env.OS.OxfordAppID,
-		"app_key": env.OS.OxfordKey,
+		"app_id":  OS.OxfordAppID,
+		"app_key": OS.OxfordKey,
 	}
 
 	request := httpc.HTTP{

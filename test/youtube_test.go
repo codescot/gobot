@@ -34,7 +34,7 @@ func TestYoutubeRequest(t *testing.T) {
 	defer testHttp.Close()
 
 	os.Setenv("YOUTUBE_SEARCH_URL", testHttp.URL)
-	env.OS = env.LoadConfig()
+	env.OS = env.OpenConfig()
 
 	youtube := command.Youtube{}
 	youtube.Execute(func(response string) {

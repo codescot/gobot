@@ -31,7 +31,7 @@ func TestUrbanDictionarySuccess(t *testing.T) {
 	defer testHttp.Close()
 
 	os.Setenv("URBAN_URL", testHttp.URL)
-	env.OS = env.LoadConfig()
+	env.OS = env.OpenConfig()
 
 	urban := command.Urban{}
 	urban.Execute(func(response string) {

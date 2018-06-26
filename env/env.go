@@ -26,7 +26,7 @@ type Environment struct {
 
 var OS Environment
 
-func LoadConfig() Environment {
+func OpenConfig() Environment {
 	env := Environment{}
 
 	reflectValue := reflect.ValueOf(&env)

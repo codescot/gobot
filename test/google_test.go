@@ -30,7 +30,7 @@ func TestGoogleRequest(t *testing.T) {
 	defer testHttp.Close()
 
 	os.Setenv("GOOGLE_SEARCH_URL", testHttp.URL)
-	env.OS = env.LoadConfig()
+	env.OS = env.OpenConfig()
 
 	google := command.Google{}
 	google.Execute(func(response string) {

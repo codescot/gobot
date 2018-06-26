@@ -90,7 +90,7 @@ func main() {
 	debug := *flag.Bool("debug", false, "-debug=true")
 	username := *flag.String("username", "gobot", "-username=gobot")
 
-	env.OS = env.LoadConfig()
+	env.OS = env.OpenConfig()
 
 	mapCommands()
 	botStart(debug, username)

@@ -37,7 +37,7 @@ func TestGiphySuccess(t *testing.T) {
 	}))
 
 	os.Setenv("GIPHY_URL", testHttp.URL)
-	env.OS = env.LoadConfig()
+	env.OS = env.OpenConfig()
 
 	gif := command.Giphy{}
 

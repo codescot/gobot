@@ -3,9 +3,11 @@ package command
 import (
 	"fmt"
 	"strings"
+
+	"github.com/gurparit/gobot/conf"
 )
 
-var OS Environment
+var OS conf.Environment
 
 type Response func(string)
 

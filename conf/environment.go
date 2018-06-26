@@ -1,4 +1,4 @@
-package command
+package conf
 
 type Environment struct {
 	Slack string `env:"SLACK_USER_TOKEN"`

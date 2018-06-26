@@ -23,7 +23,7 @@ type GoogleResult struct {
 
 // Execute Google implementation
 func (Google) Execute(r Response, query string) {
-	targetURL := FormatURL(
+	targetURL := httpc.FormatURL(
 		OS.GoogleURL,
 		OS.GoogleKey,
 		OS.GoogleSearchID,

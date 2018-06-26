@@ -32,7 +32,7 @@ type GiphyResult struct {
 
 // Execute Giphy implementation
 func (Giphy) Execute(r Response, query string) {
-	targetURL := FormatURL(
+	targetURL := httpc.FormatURL(
 		OS.GiphyURL,
 		OS.GiphyKey,
 		url.QueryEscape(query),

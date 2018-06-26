@@ -25,7 +25,7 @@ type YoutubeResult struct {
 }
 
 func (Youtube) Execute(r Response, query string) {
-	targetURL := FormatURL(
+	targetURL := httpc.FormatURL(
 		OS.YoutubeURL,
 		OS.GoogleKey,
 		url.QueryEscape(query),

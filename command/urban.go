@@ -21,7 +21,7 @@ type UrbanResult struct {
 }
 
 func (Urban) Execute(r Response, query string) {
-	targetURL := FormatURL(
+	targetURL := httpc.FormatURL(
 		OS.UrbanURL,
 		url.QueryEscape(query),
 	)

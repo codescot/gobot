@@ -59,7 +59,7 @@ func (ox OxfordResult) getDefinition() string {
 }
 
 func (ox Oxford) search(searchString string) (OxfordResult, error) {
-	targetURL := FormatURL(
+	targetURL := httpc.FormatURL(
 		OS.OxfordURL,
 		url.QueryEscape(searchString),
 	)

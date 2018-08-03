@@ -73,7 +73,7 @@ func botStart(debug bool, username string) {
 			}
 			if len(slackMsg) > 0 && slackMsg[0].Username == username {
 				for _, reaction := range slackMsg[0].Msg.Reactions {
-					if reaction.Name == "-1" && reaction.Count > 2 {
+					if reaction.Name == "do_not_litter" {
 						rtm.DeleteMessage(event.Item.Channel, event.Item.Timestamp)
 						break
 					}

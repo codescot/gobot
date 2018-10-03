@@ -47,6 +47,15 @@ func run(bot func(string), message string) {
 	}
 }
 
+// https://godoc.org/github.com/nlopes/slack#PostMessageParameters
+func postParams() slack.PostMessageParameters {
+	params := slack.NewPostMessageParameters()
+	params.UnfurlLinks = true
+	params.UnfurlMedia = true
+	
+	return params
+}
+
 func botStart(debug bool, username string) {
 	client := slack.New(command.OS.Slack)
 	client.SetDebug(debug)
@@ -62,7 +71,7 @@ func botStart(debug bool, username string) {
 		case *slack.MessageEvent:
 			if event.Msg.Username != username {
 				go run(func(response string) {
-					bot.PostMessage(event.Msg.Channel, response, slack.NewPostMessageParameters())
+					bot.PostMessage(event.Msg.Channel, response, postParams())
 				}, event.Msg.Text)
 			}
 			break

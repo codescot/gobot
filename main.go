@@ -52,7 +52,7 @@ func postParams() slack.PostMessageParameters {
 	params := slack.NewPostMessageParameters()
 	params.UnfurlLinks = true
 	params.UnfurlMedia = true
-	
+
 	return params
 }
 
@@ -66,12 +66,14 @@ func botStart(debug bool, username string) {
 	rtm := bot.NewRTM()
 	go rtm.ManageConnection()
 
+	postMessageParams := postParams()
+
 	for msg := range rtm.IncomingEvents {
 		switch event := msg.Data.(type) {
 		case *slack.MessageEvent:
 			if event.Msg.Username != username {
 				go run(func(response string) {
-					bot.PostMessage(event.Msg.Channel, response, postParams())
+					bot.PostMessage(event.Msg.Channel, response, postMessageParams)
 				}, event.Msg.Text)
 			}
 			break

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/gurparit/go-common/env"
@@ -54,7 +55,7 @@ func botStart(debug bool) {
 	ircobj := irc.IRC(username, username)
 	ircobj.Password = command.ENV.Password
 
-	ircobj.UseTLS = command.ENV.UseTLS
+	ircobj.UseTLS, _ = strconv.ParseBool(command.ENV.UseTLS)
 	ircobj.Debug = debug
 
 	ircobj.AddCallback("001", func(e *irc.Event) {

@@ -5,7 +5,7 @@ type Environment struct {
 	TwitchURL string `env:"TWITCHBOT_URL"`
 	Username  string `env:"TWITCHBOT_USERNAME"`
 	Password  string `env:"TWITCHBOT_PASSWORD"`
-	UseTLS    bool   `env:"TWITCHBOT_USE_TLS"`
+	UseTLS    string `env:"TWITCHBOT_USE_TLS"`
 
 	TwitchChannelID string `env:"TWITCHBOT_CHANNEL_ID"`
 

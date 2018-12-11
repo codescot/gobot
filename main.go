@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"strconv"
+	"log"
+	"net"
 	"strings"
 
 	"github.com/gurparit/go-common/env"
-	irc "github.com/gurparit/go-ircevent"
 	"github.com/gurparit/twitchbot/command"
+	irc "gopkg.in/irc.v3"
 )
 
 var functions = make(map[string]command.Command)
@@ -50,29 +51,52 @@ func run(bot func(string), message string) {
 
 func botStart(debug bool) {
 	username := command.ENV.Username
+	password := command.ENV.Password
 	channelID := command.ENV.TwitchChannelID
 
-	ircobj := irc.IRC(username, username)
-	ircobj.Password = command.ENV.Password
+	fmt.Printf("PASS %s\n", password)
+	fmt.Printf("USER %s\n", username)
+	fmt.Printf("CHAN %s\n", channelID)
 
-	ircobj.UseTLS, _ = strconv.ParseBool(command.ENV.UseTLS)
-	ircobj.Debug = debug
+	fmt.Println("Dial Connection")
+	conn, err := net.Dial("tcp", command.ENV.TwitchURL)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-	ircobj.AddCallback("001", func(e *irc.Event) {
-		ircobj.Join(channelID)
-	})
-	ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
-		message := event.Message()
-		if strings.HasPrefix(message, "!") {
-			go run(func(response string) {
-				ircobj.Privmsg(channelID, response)
-			}, message)
-		}
-	})
+	config := irc.ClientConfig{
+		Nick: username,
+		Pass: password,
+		User: username,
+		Handler: irc.HandlerFunc(func(c *irc.Client, m *irc.Message) {
+			if m.Command == "001" {
+				c.Write(fmt.Sprintf("JOIN %s", channelID))
+			} else if m.Command == "PRIVMSG" {
+				message := m.Trailing()
+				if strings.HasPrefix(message, "!") {
+					go run(func(response string) {
+						c.WriteMessage(&irc.Message{
+							Command: "PRIVMSG",
+							Params: []string{
+								m.Params[0],
+								response,
+							},
+						})
+					}, message)
+				}
+			}
+		}),
+	}
 
-	ircobj.Connect(command.ENV.TwitchURL)
-	ircobj.Nick(username)
-	ircobj.Loop()
+	fmt.Println("New Client")
+	// Create the client
+	client := irc.NewClient(conn, config)
+
+	fmt.Println("Run Client")
+	err = client.Run()
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
 
 func main() {

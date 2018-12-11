@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/gurparit/go-common/env"
-	"github.com/gurparit/gobot/command"
-	"github.com/nlopes/slack"
+	irc "github.com/gurparit/go-ircevent"
+	"github.com/gurparit/twitchbot/command"
 )
 
 var functions = make(map[string]command.Command)
@@ -47,62 +47,38 @@ func run(bot func(string), message string) {
 	}
 }
 
-// https://godoc.org/github.com/nlopes/slack#PostMessageParameters
-func postParams() slack.PostMessageParameters {
-	params := slack.NewPostMessageParameters()
-	params.UnfurlLinks = true
-	params.UnfurlMedia = true
+func botStart(debug bool) {
+	username := command.ENV.Username
+	channelID := command.ENV.TwitchChannelID
 
-	return params
-}
+	ircobj := irc.IRC(username, username)
+	ircobj.Password = command.ENV.Password
 
-func botStart(debug bool, username string) {
-	client := slack.New(command.OS.Slack)
-	client.SetDebug(debug)
+	ircobj.UseTLS = command.ENV.UseTLS
+	ircobj.Debug = debug
 
-	bot := slack.New(command.OS.Bot)
-	bot.SetDebug(debug)
-
-	rtm := bot.NewRTM()
-	go rtm.ManageConnection()
-
-	postMessageParams := postParams()
-
-	for msg := range rtm.IncomingEvents {
-		switch event := msg.Data.(type) {
-		case *slack.MessageEvent:
-			if event.Msg.Username != username {
-				go run(func(response string) {
-					bot.PostMessage(event.Msg.Channel, response, postMessageParams)
-				}, event.Msg.Text)
-			}
-			break
-		case *slack.ReactionAddedEvent:
-			slackMsg, err := client.GetChannelReplies(event.Item.Channel, event.Item.Timestamp)
-			if err != nil {
-				fmt.Println(err)
-			}
-			if len(slackMsg) > 0 && slackMsg[0].Username == username {
-				for _, reaction := range slackMsg[0].Msg.Reactions {
-					if reaction.Name == "do_not_litter" {
-						rtm.DeleteMessage(event.Item.Channel, event.Item.Timestamp)
-						break
-					}
-				}
-			}
-			break
-		default:
-			// do nothing.
+	ircobj.AddCallback("001", func(e *irc.Event) {
+		ircobj.Join(channelID)
+	})
+	ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
+		message := event.Message()
+		if strings.HasPrefix(message, "!") {
+			go run(func(response string) {
+				ircobj.Privmsg(channelID, response)
+			}, message)
 		}
-	}
+	})
+
+	ircobj.Connect(command.ENV.TwitchURL)
+	ircobj.Nick(username)
+	ircobj.Loop()
 }
 
 func main() {
 	debug := *flag.Bool("debug", false, "-debug=true")
-	username := *flag.String("username", "gobot", "-username=gobot")
 
-	env.Read(&command.OS)
+	env.Read(&command.ENV)
 
 	mapCommands()
-	botStart(debug, username)
+	botStart(debug)
 }

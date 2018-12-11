@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gurparit/gobot/command"
+	"github.com/gurparit/twitchbot/command"
 )
 
 func TestTimeSuccess(t *testing.T) {

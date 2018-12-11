@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 
 	"github.com/gurparit/go-common/env"
-	"github.com/gurparit/gobot/command"
+	"github.com/gurparit/twitchbot/command"
 )
 
 func TestGiphySuccess(t *testing.T) {

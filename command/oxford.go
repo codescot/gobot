@@ -60,14 +60,14 @@ func (ox OxfordResult) getDefinition() string {
 
 func (ox Oxford) search(searchString string) (OxfordResult, error) {
 	targetURL := httpc.FormatURL(
-		OS.OxfordURL,
+		ENV.OxfordURL,
 		url.QueryEscape(searchString),
 	)
 
 	headers := map[string]string{
 		"Accept":  "application/json",
-		"app_id":  OS.OxfordAppID,
-		"app_key": OS.OxfordKey,
+		"app_id":  ENV.OxfordAppID,
+		"app_key": ENV.OxfordKey,
 	}
 
 	request := httpc.HTTP{

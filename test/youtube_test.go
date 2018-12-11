@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/gurparit/go-common/env"
-	"github.com/gurparit/gobot/command"
+	"github.com/gurparit/twitchbot/command"
 )
 
 func TestYoutubeRequest(t *testing.T) {

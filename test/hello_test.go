@@ -3,7 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/gurparit/gobot/command"
+	"github.com/gurparit/twitchbot/command"
 )
 
 func TestHelloGoSuccess(t *testing.T) {

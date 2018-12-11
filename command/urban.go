@@ -22,7 +22,7 @@ type UrbanResult struct {
 
 func (Urban) Execute(r Response, query string) {
 	targetURL := httpc.FormatURL(
-		OS.UrbanURL,
+		ENV.UrbanURL,
 		url.QueryEscape(query),
 	)
 

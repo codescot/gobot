@@ -24,9 +24,9 @@ type GoogleResult struct {
 // Execute Google implementation
 func (Google) Execute(r Response, query string) {
 	targetURL := httpc.FormatURL(
-		OS.GoogleURL,
-		OS.GoogleKey,
-		OS.GoogleSearchID,
+		ENV.GoogleURL,
+		ENV.GoogleKey,
+		ENV.GoogleSearchID,
 		url.QueryEscape(query),
 	)
 

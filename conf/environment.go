@@ -1,8 +1,13 @@
 package conf
 
+// Environment contains a key/value of environment variable.
 type Environment struct {
-	Slack string `env:"SLACK_USER_TOKEN"`
-	Bot   string `env:"BOT_USER_TOKEN"`
+	TwitchURL string `env:"TWITCHBOT_URL"`
+	Username  string `env:"TWITCHBOT_USERNAME"`
+	Password  string `env:"TWITCHBOT_PASSWORD"`
+	UseTLS    bool   `env:"TWITCHBOT_USE_TLS"`
+
+	TwitchChannelID string `env:"TWITCHBOT_CHANNEL_ID"`
 
 	UrbanURL   string `env:"URBAN_URL"`
 	YoutubeURL string `env:"YOUTUBE_SEARCH_URL"`

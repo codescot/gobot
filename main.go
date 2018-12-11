@@ -71,7 +71,7 @@ func botStart(debug bool) {
 		Handler: irc.HandlerFunc(func(c *irc.Client, m *irc.Message) {
 			if m.Command == "001" {
 				c.Write(fmt.Sprintf("JOIN %s", channelID))
-			} else if m.Command == "PRIVMSG" {
+			} else if m.Command == "PRIVMSG" && c.FromChannel(m) {
 				message := m.Trailing()
 				if strings.HasPrefix(message, "!") {
 					go run(func(response string) {

@@ -16,3 +16,5 @@ github.com/thoj/go-ircevent v0.0.0-20180816043103-14f3614f28c3 h1:389FrrKIAlxqQM
 github.com/thoj/go-ircevent v0.0.0-20180816043103-14f3614f28c3/go.mod h1:QYOctLs5qEsaIrA/PKEc4YqAv2SozbxNEX0vMPs84p4=
 gopkg.in/irc.v3 v3.0.0-20180411221057-29f1845f11cf h1:5ocLu0aH1+I5FXUM1IYAQ7KhX1iXdEMnTG/U6dKBDNQ=
 gopkg.in/irc.v3 v3.0.0-20180411221057-29f1845f11cf/go.mod h1:qE0DWv0j8Z8wCbFhA9783JBO0bufi3rttcV1Sjin8io=
+gopkg.in/irc.v3 v3.0.0 h1:I11O1yg1YfDj3z++0A63X616NfV/5tOzZeZf7LRrQfw=
+gopkg.in/irc.v3 v3.0.0/go.mod h1:qE0DWv0j8Z8wCbFhA9783JBO0bufi3rttcV1Sjin8io=

@@ -26,7 +26,7 @@ type YoutubeResult struct {
 
 func (Youtube) Execute(r Response, query string) {
 	targetURL := httpc.FormatURL(
-		ENV.YoutubeURL,
+		"https://www.googleapis.com/youtube/v3/search?part=snippet&key=%s&maxResults=1&type=video&q=%s",
 		ENV.GoogleKey,
 		url.QueryEscape(query),
 	)

@@ -5,6 +5,7 @@
 **/env.list
 **/debug
 **/.idea
+**/.vscode
 twitchbot
 gobot
 live-backup

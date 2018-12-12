@@ -60,7 +60,7 @@ func (ox OxfordResult) getDefinition() string {
 
 func (ox Oxford) search(searchString string) (OxfordResult, error) {
 	targetURL := httpc.FormatURL(
-		ENV.OxfordURL,
+		"https://od-api.oxforddictionaries.com/api/v1/entries/en/%s",
 		url.QueryEscape(searchString),
 	)
 

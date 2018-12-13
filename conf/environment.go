@@ -1,5 +1,8 @@
 package conf
 
+// ENV contains the preloaded environment variables
+var ENV Environment
+
 // Environment contains a key/value of environment variable.
 type Environment struct {
 	TwitchURL          string `env:"TWITCH_URL"`

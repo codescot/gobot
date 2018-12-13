@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gurparit/go-common/httpc"
+	"github.com/gurparit/twitchbot/conf"
 )
 
 // GiphyResponse base response for Giphy Search result
@@ -30,11 +31,11 @@ type GiphyResult struct {
 	} `json:"data"`
 }
 
-// Execute Giphy implementation
+// Execute run command
 func (Giphy) Execute(r Response, query string) {
 	targetURL := httpc.FormatURL(
 		"https://api.giphy.com/v1/gifs/search?api_key=%s&q=%s&limit=1&lang=en",
-		ENV.GiphyKey,
+		conf.ENV.GiphyKey,
 		url.QueryEscape(query),
 	)
 

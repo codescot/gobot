@@ -10,16 +10,19 @@ import (
 	"github.com/gurparit/go-common/httpc"
 )
 
-const UrbanResponse = "%s - %s"
+const urbanResponse = "%s - %s"
 
+// Urban urban dictionary command
 type Urban struct{}
 
+// UrbanResult urban dictionary json struct
 type UrbanResult struct {
 	List []struct {
 		Definition string `json:"definition"`
 	} `json:"list"`
 }
 
+// Execute run command
 func (Urban) Execute(r Response, query string) {
 	targetURL := httpc.FormatURL(
 		"https://api.urbandictionary.com/v0/define?term=%s",
@@ -42,7 +45,7 @@ func (Urban) Execute(r Response, query string) {
 		randomDefinition := rand.Intn(resultCount)
 		meaning := result.List[randomDefinition]
 
-		result := fmt.Sprintf(UrbanResponse, query, meaning.Definition)
+		result := fmt.Sprintf(urbanResponse, query, meaning.Definition)
 		r(result)
 	} else {
 		r("[ud] no results found")

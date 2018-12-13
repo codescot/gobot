@@ -7,10 +7,12 @@ import (
 	"net/http"
 
 	"github.com/gurparit/go-common/httpc"
+	"github.com/gurparit/twitchbot/conf"
 )
 
-const GoogleResponse = "%s - %s"
+const googleResponse = "%s - %s"
 
+// Google google search command
 type Google struct{}
 
 // GoogleResult : sample response {"items":[{"title":"Netflix - Watch TV Shows Online, Watch Movies Online","link":"https://www.netflix.com/"}]}
@@ -21,12 +23,12 @@ type GoogleResult struct {
 	} `json:"items"`
 }
 
-// Execute Google implementation
+// Execute run command
 func (Google) Execute(r Response, query string) {
 	targetURL := httpc.FormatURL(
 		"https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&num=1&fields=items(title,link)&prettyPrint=false&q=%s",
-		ENV.GoogleKey,
-		ENV.GoogleSearchID,
+		conf.ENV.GoogleKey,
+		conf.ENV.GoogleSearchID,
 		url.QueryEscape(query),
 	)
 
@@ -45,7 +47,7 @@ func (Google) Execute(r Response, query string) {
 
 	if resultCount > 0 {
 		value := result.Items[0]
-		result := fmt.Sprintf(GoogleResponse, value.Title, value.Link)
+		result := fmt.Sprintf(googleResponse, value.Title, value.Link)
 
 		r(result)
 	} else {

@@ -3,21 +3,23 @@ package command
 import (
 	"fmt"
 
+	"net/http"
 	"net/url"
 
-	"net/http"
-
 	"github.com/gurparit/go-common/httpc"
+	"github.com/gurparit/twitchbot/conf"
 )
 
-const OxfordResponse = "%s - %s"
+const oxfordResponse = "%s - %s"
 
 const oxfordNoResults = "[oxford] no results found"
 
+// Oxford oxford dictionary search command
 type Oxford struct {
 	Etymology bool
 }
 
+// OxfordResult container for oxford dictionary response
 type OxfordResult struct {
 	Results []struct {
 		LexicalEntries []struct {
@@ -66,8 +68,8 @@ func (ox Oxford) search(searchString string) (OxfordResult, error) {
 
 	headers := map[string]string{
 		"Accept":  "application/json",
-		"app_id":  ENV.OxfordAppID,
-		"app_key": ENV.OxfordKey,
+		"app_id":  conf.ENV.OxfordAppID,
+		"app_key": conf.ENV.OxfordKey,
 	}
 
 	request := httpc.HTTP{
@@ -82,6 +84,7 @@ func (ox Oxford) search(searchString string) (OxfordResult, error) {
 	return result, err
 }
 
+// Execute run command
 func (ox Oxford) Execute(r Response, query string) {
 	result, err := ox.search(query)
 	if err != nil {
@@ -102,7 +105,7 @@ func (ox Oxford) Execute(r Response, query string) {
 			definition = oxfordNoResults
 		}
 
-		message := fmt.Sprintf(OxfordResponse, query, definition)
+		message := fmt.Sprintf(oxfordResponse, query, definition)
 
 		r(message)
 	} else {

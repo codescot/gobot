@@ -48,7 +48,7 @@ func (*Bot) onNewMessage(bot func(string), message string) {
 }
 
 // Start bot start
-func (bot *Bot) Start(username, password, channel string) {
+func (bot *Bot) Start(server, username, password, channel string) {
 	ircobj := irc.IRC(username, username)
 	ircobj.UseTLS = true
 	ircobj.Debug = false
@@ -71,6 +71,6 @@ func (bot *Bot) Start(username, password, channel string) {
 	})
 
 	mapCommands()
-	ircobj.Connect(command.ENV.TwitchURL)
+	ircobj.Connect(server)
 	ircobj.Loop()
 }

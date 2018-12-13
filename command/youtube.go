@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+	"github.com/gurparit/twitchbot/conf"
 	"net/url"
 
 	"net/http"
@@ -9,10 +10,12 @@ import (
 	"github.com/gurparit/go-common/httpc"
 )
 
-const YoutubeVideoURL = "%s - http://www.youtube.com/watch?v=%s"
+const youtubeVideoURL = "%s - http://www.youtube.com/watch?v=%s"
 
+// Youtube youtube search command
 type Youtube struct{}
 
+// YoutubeResult container for youtube search result
 type YoutubeResult struct {
 	Items []struct {
 		Snippet struct {
@@ -24,10 +27,11 @@ type YoutubeResult struct {
 	} `json:"items"`
 }
 
+// Execute run command
 func (Youtube) Execute(r Response, query string) {
 	targetURL := httpc.FormatURL(
 		"https://www.googleapis.com/youtube/v3/search?part=snippet&key=%s&maxResults=1&type=video&q=%s",
-		ENV.GoogleKey,
+		conf.ENV.GoogleKey,
 		url.QueryEscape(query),
 	)
 
@@ -46,7 +50,7 @@ func (Youtube) Execute(r Response, query string) {
 
 	if resultCount > 0 {
 		value := result.Items[0]
-		message := fmt.Sprintf(YoutubeVideoURL, value.Snippet.Title, value.ID.VideoID)
+		message := fmt.Sprintf(youtubeVideoURL, value.Snippet.Title, value.ID.VideoID)
 
 		r(message)
 	} else {

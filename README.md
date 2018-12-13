@@ -1,4 +1,4 @@
-# gobot
+# twitchbot
 Twitch/IRC Bot written in Golang
 
 # docker build image

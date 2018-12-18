@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gurparit/go-common/httpc"
-	"github.com/gurparit/twitchbot/conf"
-	"github.com/gurparit/twitchbot/core"
+	"github.com/gurparit/go-irc-bot/conf"
+	"github.com/gurparit/go-irc-bot/core"
 )
 
 type authentication struct {
@@ -19,7 +19,7 @@ type authentication struct {
 	TokenType    string   `json:"token_type"`
 }
 
-const oAuthBaseURL = "https://id.twitch.tv/oauth2/authorize?client_id=%s&redirect_uri=http://localhost:8080/oauth2&response_type=code&scope=chat:read%%20chat:edit&state=1234"
+const oAuthBaseURL = "https://id.twitch.tv/oauth2/authorize?client_id=%s&redirect_uri=http://localhost:8081/oauth2&response_type=code&scope=chat:read%%20chat:edit&state=1234"
 
 var auth = authentication{}
 
@@ -34,7 +34,7 @@ func callbackReceived() core.CallbackHandler {
 				"client_secret": conf.ENV.TwitchClientSecret,
 				"code":          code,
 				"grant_type":    "authorization_code",
-				"redirect_uri":  "http://localhost:8080/oauth2",
+				"redirect_uri":  "http://localhost:8081/oauth2",
 			},
 		}
 
@@ -71,7 +71,7 @@ func Go() {
 	web := core.Web{}
 
 	targetURL := fmt.Sprintf(oAuthBaseURL, conf.ENV.TwitchClientID)
+	// web.OpenBrowser(targetURL)
 
-	web.OpenBrowser(targetURL)
-	web.Start(callbackReceived())
+	web.Start(targetURL, callbackReceived())
 }

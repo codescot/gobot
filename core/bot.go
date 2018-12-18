@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/gurparit/go-irc-bot/command"
 	irc "github.com/gurparit/go-ircevent"
-	"github.com/gurparit/twitchbot/command"
 )
 
 // Bot default bot object
@@ -15,6 +15,7 @@ var functions = make(map[string]command.Command)
 
 func mapCommands() {
 	functions["!go"] = command.Hello{}
+	functions["!so"] = command.Shoutout{}
 	functions["!time"] = command.Time{}
 	functions["!g"] = command.Google{}
 	functions["!ud"] = command.Urban{}

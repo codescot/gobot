@@ -52,15 +52,18 @@ func (web *Web) callback(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(statusCode)
 		log.Fatal(err)
 	} else {
-		w.Write([]byte("Login Successful, you may now close this tab."))
+		http.Redirect(w, r, "http://localhost:8080/", 302)
 	}
 }
 
 // Start start the web server
-func (web *Web) Start(c CallbackHandler) {
-	web.Server = &http.Server{Addr: ":8080"}
+func (web *Web) Start(loginURL string, c CallbackHandler) {
+	web.Server = &http.Server{Addr: ":8081"}
 	web.Callback = c
 
+	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, loginURL, 302)
+	})
 	http.HandleFunc("/oauth2", web.callback)
 
 	err := web.Server.ListenAndServe()

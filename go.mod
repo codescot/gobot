@@ -1,4 +1,4 @@
-module github.com/gurparit/twitchbot
+module github.com/gurparit/go-irc-bot
 
 require (
 	github.com/gurparit/go-common v0.0.1

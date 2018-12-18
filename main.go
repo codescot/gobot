@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gurparit/go-common/env"
-	"github.com/gurparit/twitchbot/conf"
-	"github.com/gurparit/twitchbot/twitch"
+	"github.com/gurparit/go-irc-bot/conf"
+	"github.com/gurparit/go-irc-bot/twitch"
 )
 
 func main() {

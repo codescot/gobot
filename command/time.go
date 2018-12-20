@@ -8,6 +8,6 @@ import (
 type Time struct{}
 
 // Execute run command
-func (Time) Execute(r Response, message string) {
-	r(time.Now().Format(time.RFC850))
+func (Time) Execute(resp Response, event MessageEvent) {
+	resp(time.Now().Format(time.RFC850))
 }

@@ -23,10 +23,10 @@ type UrbanResult struct {
 }
 
 // Execute run command
-func (Urban) Execute(r Response, query string) {
+func (Urban) Execute(resp Response, event MessageEvent) {
 	targetURL := httpc.FormatURL(
 		"https://api.urbandictionary.com/v0/define?term=%s",
-		url.QueryEscape(query),
+		url.QueryEscape(event.Message),
 	)
 
 	request := httpc.HTTP{
@@ -36,7 +36,7 @@ func (Urban) Execute(r Response, query string) {
 
 	var result UrbanResult
 	if err := request.JSON(&result); err != nil {
-		r(fmt.Sprintf("[ud] %s", err.Error()))
+		resp(fmt.Sprintf("[ud] %s", err.Error()))
 		return
 	}
 
@@ -45,10 +45,10 @@ func (Urban) Execute(r Response, query string) {
 		randomDefinition := rand.Intn(resultCount)
 		meaning := result.List[randomDefinition]
 
-		result := fmt.Sprintf(urbanResponse, query, meaning.Definition)
-		r(result)
+		result := fmt.Sprintf(urbanResponse, event.Message, meaning.Definition)
+		resp(result)
 	} else {
-		r("[ud] no results found")
+		resp("[ud] no results found")
 		return
 	}
 }

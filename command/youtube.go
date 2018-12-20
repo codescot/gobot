@@ -2,10 +2,8 @@ package command
 
 import (
 	"fmt"
-	"github.com/gurparit/twitchbot/conf"
-	"net/url"
-
 	"net/http"
+	"net/url"
 
 	"github.com/gurparit/go-common/httpc"
 )
@@ -28,11 +26,11 @@ type YoutubeResult struct {
 }
 
 // Execute run command
-func (Youtube) Execute(r Response, query string) {
+func (Youtube) Execute(resp Response, event MessageEvent) {
 	targetURL := httpc.FormatURL(
 		"https://www.googleapis.com/youtube/v3/search?part=snippet&key=%s&maxResults=1&type=video&q=%s",
-		conf.ENV.GoogleKey,
-		url.QueryEscape(query),
+		event.Config.GoogleKey,
+		url.QueryEscape(event.Message),
 	)
 
 	request := httpc.HTTP{
@@ -42,7 +40,7 @@ func (Youtube) Execute(r Response, query string) {
 
 	var result YoutubeResult
 	if err := request.JSON(&result); err != nil {
-		r(fmt.Sprintf("[youtube] %s", err.Error()))
+		resp(fmt.Sprintf("[youtube] %s", err.Error()))
 		return
 	}
 
@@ -52,8 +50,8 @@ func (Youtube) Execute(r Response, query string) {
 		value := result.Items[0]
 		message := fmt.Sprintf(youtubeVideoURL, value.Snippet.Title, value.ID.VideoID)
 
-		r(message)
+		resp(message)
 	} else {
-		r("[youtube] no results found")
+		resp("[youtube] no results found")
 	}
 }

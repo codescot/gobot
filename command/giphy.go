@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gurparit/go-common/httpc"
-	"github.com/gurparit/twitchbot/conf"
 )
 
 // GiphyResponse base response for Giphy Search result
@@ -32,11 +31,11 @@ type GiphyResult struct {
 }
 
 // Execute run command
-func (Giphy) Execute(r Response, query string) {
+func (Giphy) Execute(resp Response, event MessageEvent) {
 	targetURL := httpc.FormatURL(
 		"https://api.giphy.com/v1/gifs/search?api_key=%s&q=%s&limit=1&lang=en",
-		conf.ENV.GiphyKey,
-		url.QueryEscape(query),
+		event.Config.GiphyKey,
+		url.QueryEscape(event.Message),
 	)
 
 	request := httpc.HTTP{
@@ -46,7 +45,7 @@ func (Giphy) Execute(r Response, query string) {
 
 	var result GiphyResult
 	if err := request.JSON(&result); err != nil {
-		r(fmt.Sprintf("[gif] %s", err.Error()))
+		resp(fmt.Sprintf("[gif] %s", err.Error()))
 		return
 	}
 
@@ -56,8 +55,8 @@ func (Giphy) Execute(r Response, query string) {
 		value := result.Data[0]
 		result := fmt.Sprintf(GiphyResponse, value.Title, value.Images.Original.URL)
 
-		r(result)
+		resp(result)
 	} else {
-		r("[gif] no results found")
+		resp("[gif] no results found")
 	}
 }

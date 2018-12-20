@@ -1,13 +1,10 @@
 package main
 
 import (
-	"github.com/gurparit/go-common/env"
-	"github.com/gurparit/go-irc-bot/conf"
-	"github.com/gurparit/go-irc-bot/twitch"
+	"github.com/gurparit/go-irc-bot/bot"
 )
 
 func main() {
-	env.Read(&conf.ENV)
-
-	twitch.Go()
+	irc := bot.Default("irc.example.com", "username", "password")
+	irc.Start()
 }

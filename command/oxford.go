@@ -7,7 +7,6 @@ import (
 	"net/url"
 
 	"github.com/gurparit/go-common/httpc"
-	"github.com/gurparit/twitchbot/conf"
 )
 
 const oxfordResponse = "%s - %s"
@@ -60,16 +59,16 @@ func (ox OxfordResult) getDefinition() string {
 	return ox.Results[0].LexicalEntries[0].Entries[0].Senses[0].Definitions[0]
 }
 
-func (ox Oxford) search(searchString string) (OxfordResult, error) {
+func (ox Oxford) search(event MessageEvent) (OxfordResult, error) {
 	targetURL := httpc.FormatURL(
 		"https://od-api.oxforddictionaries.com/api/v1/entries/en/%s",
-		url.QueryEscape(searchString),
+		url.QueryEscape(event.Message),
 	)
 
 	headers := map[string]string{
 		"Accept":  "application/json",
-		"app_id":  conf.ENV.OxfordAppID,
-		"app_key": conf.ENV.OxfordKey,
+		"app_id":  event.Config.OxfordAppID,
+		"app_key": event.Config.OxfordKey,
 	}
 
 	request := httpc.HTTP{
@@ -85,10 +84,10 @@ func (ox Oxford) search(searchString string) (OxfordResult, error) {
 }
 
 // Execute run command
-func (ox Oxford) Execute(r Response, query string) {
-	result, err := ox.search(query)
+func (ox Oxford) Execute(resp Response, event MessageEvent) {
+	result, err := ox.search(event)
 	if err != nil {
-		r(fmt.Sprintf("[ox] %s", err.Error()))
+		resp(fmt.Sprintf("[ox] %s", err.Error()))
 		return
 	}
 
@@ -105,10 +104,10 @@ func (ox Oxford) Execute(r Response, query string) {
 			definition = oxfordNoResults
 		}
 
-		message := fmt.Sprintf(oxfordResponse, query, definition)
+		message := fmt.Sprintf(oxfordResponse, event.Message, definition)
 
-		r(message)
+		resp(message)
 	} else {
-		r(oxfordNoResults)
+		resp(oxfordNoResults)
 	}
 }

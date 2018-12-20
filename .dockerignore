@@ -6,6 +6,6 @@
 **/.vscode/
 **/tests/
 **/README.md
-**/twitchbot
 **/.vscode
 **/.server
+go-irc-bot

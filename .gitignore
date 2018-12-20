@@ -6,6 +6,5 @@
 **/debug
 **/.idea
 **/.vscode
-twitchbot
-gobot
 **/.server
+go-irc-bot

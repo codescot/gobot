@@ -4,6 +4,6 @@ package command
 type Echo struct{}
 
 // Execute run command
-func (Echo) Execute(r Response, query string) {
-	r(query)
+func (Echo) Execute(resp Response, event MessageEvent) {
+	resp(event.Message)
 }

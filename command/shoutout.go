@@ -1,6 +1,7 @@
 package command
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -8,12 +9,12 @@ import (
 type Shoutout struct{}
 
 // Execute run command
-func (Shoutout) Execute(r Response, query string) {
-	user := query
+func (Shoutout) Execute(resp Response, event MessageEvent) {
+	user := event.Message
 
 	if strings.HasPrefix(user, "@") {
 		user = user[1:]
 	}
 
-	r("https://twitch.tv/" + user)
+	resp(fmt.Sprintf("Check out https://twitch.tv/%s", user))
 }

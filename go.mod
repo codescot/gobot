@@ -1,4 +1,4 @@
-module github.com/gurparit/go-irc-bot
+module github.com/gurparit/go-ircbot
 
 require (
 	github.com/gurparit/go-common v0.0.1

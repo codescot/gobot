@@ -1,7 +1,7 @@
 package command
 
 import (
-	"github.com/gurparit/go-irc-bot/conf"
+	"github.com/gurparit/go-ircbot/conf"
 )
 
 // Response a response wrapper

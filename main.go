@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gurparit/go-irc-bot/bot"
+	"github.com/gurparit/go-ircbot/bot"
 )
 
 func main() {

@@ -3,10 +3,10 @@ package bot
 import (
 	"fmt"
 	"github.com/gurparit/go-common/env"
-	"github.com/gurparit/go-irc-bot/conf"
+	"github.com/gurparit/go-ircbot/conf"
 	"strings"
 
-	"github.com/gurparit/go-irc-bot/command"
+	"github.com/gurparit/go-ircbot/command"
 	irc "github.com/gurparit/go-ircevent"
 )
 

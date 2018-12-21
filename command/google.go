@@ -26,8 +26,8 @@ type GoogleResult struct {
 func (Google) Execute(resp Response, event MessageEvent) {
 	targetURL := httpc.FormatURL(
 		"https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&num=1&fields=items(title,link)&prettyPrint=false&q=%s",
-		event.Config.GoogleKey,
-		event.Config.GoogleSearchID,
+		event.Keys.GoogleKey,
+		event.Keys.GoogleSearchID,
 		url.QueryEscape(event.Message),
 	)
 

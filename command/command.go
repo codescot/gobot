@@ -13,7 +13,7 @@ type MessageEvent struct {
 	Username string
 	Message  string
 
-	Config *conf.Environment
+	Keys *conf.Keys
 }
 
 // Command basic command interface

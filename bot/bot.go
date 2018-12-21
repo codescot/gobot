@@ -12,7 +12,7 @@ import (
 
 // Bot irc bot object
 type Bot struct {
-	env    *conf.Environment
+	keys    *conf.Keys
 	config *Config
 	conn   *irc.Connection
 }
@@ -94,7 +94,7 @@ func (bot *Bot) onMessageEvent(event *irc.Event) {
 			Channel:  channel,
 			Username: user,
 			Message:  message,
-			Config:   bot.env,
+			Keys:     bot.keys,
 		})
 	}
 }
@@ -161,10 +161,10 @@ func (bot *Bot) Start() {
 
 	defaultCommands()
 	if bot.config.ExtendedCommands {
-		cnf := conf.Environment{}
-		env.Read(&cnf)
+		keys := conf.Keys{}
+		env.Read(&keys)
 
-		bot.env = &cnf
+		bot.keys = &keys
 		extendedCommands()
 	}
 

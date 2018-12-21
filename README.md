@@ -1,4 +1,4 @@
-# go-irc-bot
+# go-ircbot
 IRC Bot written in Golang
 
 # docker build image

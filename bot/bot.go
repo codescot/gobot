@@ -178,3 +178,8 @@ func (bot *Bot) Start() {
 	conn.Connect(bot.config.Server)
 	conn.Loop()
 }
+
+//func main() {
+//	irc := bot.Default("irc.example.com", "username", "password")
+//	irc.Start()
+//}

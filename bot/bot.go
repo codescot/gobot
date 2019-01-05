@@ -28,6 +28,8 @@ type Config struct {
 	Channels []string
 
 	ExtendedCommands bool
+
+	MessageListeners chan string
 }
 
 var functions = make(map[string]command.Command)
@@ -88,6 +90,11 @@ func (bot *Bot) onMessageEvent(event *irc.Event) {
 	channel := event.Arguments[0]
 	user := event.Nick
 	message := event.Message()
+
+	events := bot.config.MessageListeners
+	if events != nil {
+		events <- fmt.Sprintf("{ username: \"%s\", message: \"%s\" }", user, message)
+	}
 
 	if strings.HasPrefix(message, "!") {
 		go bot.onNewMessage(bot.onResponseEvent(channel), command.MessageEvent{

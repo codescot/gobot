@@ -93,7 +93,7 @@ func (bot *Bot) onMessageEvent(event *irc.Event) {
 
 	events := bot.config.MessageListeners
 	if events != nil {
-		events <- fmt.Sprintf("{ username: \"%s\", message: \"%s\" }", user, message)
+		events <- fmt.Sprintf("{ \"username\": \"%s\", \"message\": \"%s\" }", user, message)
 	}
 
 	if strings.HasPrefix(message, "!") {

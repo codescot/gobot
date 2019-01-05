@@ -4,6 +4,8 @@ import (
 	"github.com/gurparit/go-ircbot/conf"
 )
 
+var KeyValues *conf.Keys
+
 // Response a response wrapper
 type Response func(string)
 
@@ -12,8 +14,6 @@ type MessageEvent struct {
 	Channel  string
 	Username string
 	Message  string
-
-	Keys *conf.Keys
 }
 
 // Command basic command interface

@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gurparit/go-common/env"
 	"github.com/gurparit/go-ircbot/conf"
@@ -91,22 +92,24 @@ func (bot *Bot) onMessageEvent(event *irc.Event) {
 	user := event.Nick
 	message := event.Message()
 
+	messageEvent := command.MessageEvent{
+		Channel:  channel,
+		Username: user,
+		Message:  message,
+	}
+
 	events := bot.config.MessageListeners
 	if events != nil {
-		events <- fmt.Sprintf("{ \"username\": \"%s\", \"message\": \"%s\" }", user, message)
+		stringData, _ := json.Marshal(messageEvent)
+		events <- fmt.Sprintf(string(stringData))
 	}
 
 	if strings.HasPrefix(message, "!") {
-		go bot.onNewMessage(bot.onResponseEvent(channel), command.MessageEvent{
-			Channel:  channel,
-			Username: user,
-			Message:  message,
-			Keys:     bot.keys,
-		})
+		go bot.onNewMessage(bot.getResponseHandlerForChannel(channel), messageEvent)
 	}
 }
 
-func (bot *Bot) onResponseEvent(channel string) command.Response {
+func (bot *Bot) getResponseHandlerForChannel(channel string) command.Response {
 	return func(response string) {
 		bot.conn.Privmsg(channel, response)
 	}
@@ -171,15 +174,10 @@ func (bot *Bot) Start() {
 		keys := conf.Keys{}
 		env.Read(&keys)
 
-		bot.keys = &keys
+		command.KeyValues = &keys
 		extendedCommands()
 	}
 
 	conn.Connect(bot.config.Server)
 	conn.Loop()
 }
-
-//func main() {
-//	irc := bot.Default("irc.example.com", "username", "password")
-//	irc.Start()
-//}

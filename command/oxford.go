@@ -67,8 +67,8 @@ func (ox Oxford) search(event MessageEvent) (OxfordResult, error) {
 
 	headers := map[string]string{
 		"Accept":  "application/json",
-		"app_id":  event.Keys.OxfordAppID,
-		"app_key": event.Keys.OxfordKey,
+		"app_id":  KeyValues.OxfordAppID,
+		"app_key": KeyValues.OxfordKey,
 	}
 
 	request := httpc.HTTP{

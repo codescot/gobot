@@ -165,7 +165,7 @@ func (bot *Bot) Start() {
 	conn.UseTLS = bot.config.UseTLS
 	conn.Debug = bot.config.Debug
 	conn.Password = bot.config.Password
-	conn.RequestCaps = []string{":twitch.tv/tags"}
+	conn.RequestCaps = []string{"twitch.tv/tags"}
 
 	bot.conn = conn
 
@@ -182,5 +182,7 @@ func (bot *Bot) Start() {
 	}
 
 	conn.Connect(bot.config.Server)
+
+	fmt.Printf("%+v\n", conn.AcknowledgedCaps)
 	conn.Loop()
 }

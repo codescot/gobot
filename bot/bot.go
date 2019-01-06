@@ -13,7 +13,7 @@ import (
 
 // Bot irc bot object
 type Bot struct {
-	keys    *conf.Keys
+	keys   *conf.Keys
 	config *Config
 	conn   *irc.Connection
 }
@@ -91,11 +91,13 @@ func (bot *Bot) onMessageEvent(event *irc.Event) {
 	channel := event.Arguments[0]
 	user := event.Nick
 	message := event.Message()
+	tags := event.Tags
 
 	messageEvent := command.MessageEvent{
 		Channel:  channel,
 		Username: user,
 		Message:  message,
+		Tags:     tags,
 	}
 
 	events := bot.config.MessageListeners

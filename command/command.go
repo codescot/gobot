@@ -14,6 +14,7 @@ type MessageEvent struct {
 	Channel  string
 	Username string
 	Message  string
+	Tags     map[string]string
 }
 
 // Command basic command interface

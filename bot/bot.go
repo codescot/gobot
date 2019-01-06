@@ -166,10 +166,13 @@ func (bot *Bot) negotiateCaps() {
 	// 2019/01/06 19:01:23 <-- :tmi.twitch.tv CAP * ACK :twitch.tv/tags
 	// 2019/01/06 19:01:23 --> CAP END
 	bot.conn.SendRaw("CAP LS")
-	bot.conn.SendRaw("CAP")
 }
 
 func (bot *Bot) onCapEvent(event *irc.Event) {
+	if event.Arguments[1] == "LS" {
+		bot.conn.SendRaw("CAP REQ :twitch.tv/tags")
+	}
+
 	if event.Arguments[1] == "ACK" {
 		bot.conn.SendRaw("CAP END")
 	}

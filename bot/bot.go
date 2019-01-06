@@ -165,6 +165,7 @@ func (bot *Bot) Start() {
 	conn.UseTLS = bot.config.UseTLS
 	conn.Debug = bot.config.Debug
 	conn.Password = bot.config.Password
+	conn.RequestCaps = []string{":twitch.tv/tags"}
 
 	bot.conn = conn
 

@@ -113,7 +113,6 @@ func (bot *Bot) onMessageEvent(event *irc.Event) {
 
 func (bot *Bot) getResponseHandlerForChannel(channel string) command.Response {
 	return func(response string) {
-		bot.conn.SendRaw("CAP REQ :twitch.tv/tags")
 		bot.conn.Privmsg(channel, response)
 	}
 }
@@ -166,6 +165,7 @@ func (bot *Bot) Start() {
 	conn.UseTLS = bot.config.UseTLS
 	conn.Debug = bot.config.Debug
 	conn.Password = bot.config.Password
+	conn.RequestCaps = []string{"twitch.tv/tags"}
 
 	bot.conn = conn
 

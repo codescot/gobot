@@ -26,7 +26,9 @@ type Config struct {
 	UseTLS   bool
 	Debug    bool
 
-	Channels []string
+	Channels        []string
+	RequestCaps     []string
+	acknowledgeCaps []string
 
 	ExtendedCommands bool
 
@@ -159,22 +161,23 @@ const (
 	EventCap = "CAP"
 )
 
-func (bot *Bot) negotiateCaps() {
-	// 2019/01/06 19:01:22 --> CAP LS
-	// 2019/01/06 19:01:22 <-- :tmi.twitch.tv CAP * LS :twitch.tv/tags twitch.tv/commands twitch.tv/membership
-	// 2019/01/06 19:01:22 --> CAP REQ :twitch.tv/tags
-	// 2019/01/06 19:01:23 <-- :tmi.twitch.tv CAP * ACK :twitch.tv/tags
-	// 2019/01/06 19:01:23 --> CAP END
+func (bot *Bot) startCaps() {
 	bot.conn.SendRaw("CAP LS")
 }
 
 func (bot *Bot) onCapEvent(event *irc.Event) {
 	if event.Arguments[1] == "LS" {
-		bot.conn.SendRaw("CAP REQ :twitch.tv/tags")
+		for _, cap := range bot.config.RequestCaps {
+			bot.conn.SendRawf("CAP REQ :%s", cap)
+		}
 	}
 
 	if event.Arguments[1] == "ACK" {
-		bot.conn.SendRaw("CAP END")
+		if len(bot.config.RequestCaps) == len(bot.config.acknowledgeCaps) {
+			bot.conn.SendRaw("CAP END")
+		} else {
+			bot.config.acknowledgeCaps = append(bot.config.acknowledgeCaps, event.Arguments[2])
+		}
 	}
 }
 
@@ -204,6 +207,9 @@ func (bot *Bot) Start() {
 
 	conn.Connect(bot.config.Server)
 
-	bot.negotiateCaps()
+	if len(bot.config.RequestCaps) > 0 {
+		bot.startCaps()
+	}
+
 	conn.Loop()
 }

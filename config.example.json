@@ -1,0 +1,26 @@
+{
+  "bot": {
+    "server": "irc.chat.com:6697",
+    "username": "botname",
+    "password": "password",
+    "tls": true,
+    "debug": true,
+    "channels": [
+      "#general"
+    ],
+    "requestCaps": [
+      "twitch.tv/tags"
+    ]
+  },
+  "commands": {
+    "hug": {
+      "mod": false,
+      "sub": false,
+      "text": "$display-name gives $1 a big warm hug. bleedPurple"
+    }
+  },
+  "team": [
+    "username1",
+    "username2"
+  ]
+}

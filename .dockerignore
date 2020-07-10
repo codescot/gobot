@@ -1,0 +1,12 @@
+**/settings.json
+**/launch.json
+**/config.json
+**/debug
+**/.circleci/
+**/.vscode/
+**/tests/
+**/README.md
+**/.vscode
+**/.server
+orc
+orc.exe

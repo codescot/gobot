@@ -1,0 +1,4 @@
+github.com/codescot/go-common v0.0.8 h1:l2MbGwqTDrvZwVj1y77b5LOAGe8hmkT/NQUZi3Mb8oQ=
+github.com/codescot/go-common v0.0.8/go.mod h1:k29Cr4MPzXoCkDnAsIXonpXxTsx1320oG6DGGmRM64Q=
+github.com/codescot/go-ircevent v0.3.0 h1:vptzSjTnfIg2NaSBeGbqv7J/JnfolJgTq5+gNhYhRho=
+github.com/codescot/go-ircevent v0.3.0/go.mod h1:QCgDktk1KfcEKgtZDYqRBLqVHUBi8a1DK3Q1xgPpOT0=

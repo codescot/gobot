@@ -14,6 +14,9 @@
       "twitch.tv/membership"
     ]
   },
+  "blocked": [
+    "blockedUsername"
+  ],
   "commands": {
     "hug": {
       "perm": "+a",

@@ -248,9 +248,9 @@ func (bot *Bot) endCap() {
 func initCommands(bot Bot) {
 	addCommand("time", command.Time{})
 	addCommand("uptime", command.Uptime{})
-	// addCommand("so", command.Shoutout{
-	// 	Team: bot.Team,
-	// })
+	addCommand("so", command.Shoutout{
+		Team: bot.Team,
+	})
 
 	for key, c := range bot.Commands {
 		addCommand(key, c)

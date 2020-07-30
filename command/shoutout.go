@@ -13,12 +13,12 @@ type Shoutout struct {
 	Team []string
 }
 
+func (Shoutout) CanExecute(event MessageEvent) bool {
+	return event.IsMod
+}
+
 // Execute run command
 func (so Shoutout) Execute(resp Response, event MessageEvent) {
-	if !event.IsMod {
-		return
-	}
-
 	tokens := strings.SplitN(event.Message, " ", 2)
 	user := tokens[0]
 	if user[0] == '@' {

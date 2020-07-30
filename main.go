@@ -1,11 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
 	"strings"
-	"time"
 
 	"github.com/codescot/go-common/array"
 	"github.com/codescot/go-common/fileio"
@@ -23,6 +20,7 @@ type Bot struct {
 	Team     []string
 	Blocked  []string
 	BadWords []string
+	Links    string
 
 	conn *irc.Connection
 }
@@ -82,6 +80,10 @@ func (*Bot) processCommand(response command.Response, event command.MessageEvent
 	event.Message = query
 
 	if c, ok := functions[action]; ok {
+		if !c.CanExecute(event) {
+			return
+		}
+
 		c.Execute(response, event)
 	}
 }
@@ -93,7 +95,7 @@ func (bot *Bot) onWelcomeEvent(channels []string) func(*irc.Event) {
 		}
 
 		for _, channel := range channels {
-			bot.conn.Join(channel)
+			bot.conn.Join(strings.ToLower(channel))
 		}
 	}
 }
@@ -107,22 +109,22 @@ func (bot *Bot) onMessageEvent(event *irc.Event) {
 	// get message tags and assign appropriately
 	messageID := event.Tags["id"]
 	badges := strings.Split(event.Tags["badges"], ",")
-	isModerator := array.DeepContains(badges, "moderator") || array.DeepContains(badges, "broadcaster")
-	isSubscriber := array.DeepContains(badges, "subscriber")
+	isSub := array.DeepContains(badges, "subscriber")
+	isMod := array.DeepContains(badges, "moderator") || array.DeepContains(badges, "broadcaster")
 
 	messageEvent := command.MessageEvent{
-		MessageID:    messageID,
-		Channel:      channel,
-		Username:     user,
-		Message:      message,
-		IsModerator:  isModerator,
-		IsSubscriber: isSubscriber,
-		Tags:         tags,
+		MessageID: messageID,
+		Channel:   channel,
+		Username:  user,
+		Message:   message,
+		IsSub:     isSub,
+		IsMod:     isMod,
+		Tags:      tags,
 	}
 
 	deleteHandler := bot.DeleteHandler(channel, messageID)
 	banHandler := bot.BanHandler(channel, user)
-	if bot.moderate(deleteHandler, banHandler, user, message) {
+	if bot.moderate(deleteHandler, banHandler, messageEvent) {
 		return
 	}
 
@@ -132,12 +134,14 @@ func (bot *Bot) onMessageEvent(event *irc.Event) {
 	}
 }
 
-func (bot *Bot) moderate(delete filter.DeleteHandler, ban filter.BanHandler, username string, message string) bool {
+func (bot *Bot) moderate(delete filter.DeleteHandler, ban filter.BanHandler, messageEvent command.MessageEvent) bool {
 	fs := []filter.Filter{
-		filter.Domain{},
+		filter.Domain{
+			Perm: bot.Links,
+		},
 		filter.Usernames{
 			Blocked:  bot.Blocked,
-			Username: username,
+			Username: messageEvent.Username,
 		},
 		filter.BadWords{
 			BadWords: bot.BadWords,
@@ -145,7 +149,14 @@ func (bot *Bot) moderate(delete filter.DeleteHandler, ban filter.BanHandler, use
 	}
 
 	for _, f := range fs {
-		switch f.Apply(message) {
+		sub := messageEvent.IsSub
+		mod := messageEvent.IsMod
+
+		if !f.ShouldApply(sub, mod) {
+			continue
+		}
+
+		switch f.Apply(messageEvent.Message) {
 		case filter.Delete:
 			delete()
 			return true
@@ -230,9 +241,6 @@ func (bot *Bot) nextCap() {
 func (bot *Bot) endCap() {
 	bot.conn.SendRaw(CapEnd)
 
-	time.Sleep(2 * time.Second)
-	bot.conn.Privmsg("#GeeScot", "Hello, World.\n")
-
 	bot.IRC.RequestCaps = bot.IRC.AcknowledgeCaps
 	bot.IRC.AcknowledgeCaps = []string{}
 }
@@ -240,9 +248,9 @@ func (bot *Bot) endCap() {
 func initCommands(bot Bot) {
 	addCommand("time", command.Time{})
 	addCommand("uptime", command.Uptime{})
-	addCommand("so", command.Shoutout{
-		Team: bot.Team,
-	})
+	// addCommand("so", command.Shoutout{
+	// 	Team: bot.Team,
+	// })
 
 	for key, c := range bot.Commands {
 		addCommand(key, c)
@@ -279,17 +287,6 @@ func startBot() {
 type messageRequest struct {
 	Channel string
 	Message string
-}
-
-func sendMessageHandler(w http.ResponseWriter, r *http.Request) {
-	var m messageRequest
-	json.NewDecoder(r.Body).Decode(&m)
-
-	bot.conn.Privmsg(m.Channel, m.Message)
-
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"status": "ok",
-	})
 }
 
 func main() {

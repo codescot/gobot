@@ -9,6 +9,10 @@ import (
 // Uptime the shoutout command
 type Uptime struct{}
 
+func (Uptime) CanExecute(MessageEvent) bool {
+	return true
+}
+
 // Execute run command
 func (Uptime) Execute(resp Response, event MessageEvent) {
 	channel := event.Channel

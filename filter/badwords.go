@@ -9,24 +9,17 @@ type BadWords struct {
 	BadWords []string
 }
 
+func (BadWords) ShouldApply(sub, mod bool) bool {
+	return true
+}
+
 // Apply filter logic
 func (bw BadWords) Apply(message string) int {
-	messageWords := strings.Split(" ", message)
 	for _, word := range bw.BadWords {
-		if itContains(messageWords, word) {
+		if strings.Contains(message, word) {
 			return Delete
 		}
 	}
 
 	return Ignore
-}
-
-func itContains(haystack []string, needle string) bool {
-	for _, item := range haystack {
-		if strings.Contains(strings.ToLower(needle), strings.ToLower(item)) {
-			return true
-		}
-	}
-
-	return false
 }

@@ -6,21 +6,30 @@
     "tls": true,
     "debug": true,
     "channels": [
-      "#general"
+      "#ChannelName"
     ],
     "requestCaps": [
-      "twitch.tv/tags"
+      "twitch.tv/tags",
+      "twitch.tv/commands",
+      "twitch.tv/membership"
     ]
   },
   "commands": {
     "hug": {
-      "mod": false,
-      "sub": false,
+      "perm": "+a",
       "text": "$display-name gives $1 a big warm hug. bleedPurple"
+    },
+    "squish": {
+      "perm": "+s",
+      "text": "$display-name gives $1 a big squish. bleedPurple"
     }
   },
   "team": [
     "username1",
     "username2"
-  ]
+  ],
+  "badWords": [
+    "testword"
+  ],
+  "links": "+s"
 }

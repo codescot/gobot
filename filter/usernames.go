@@ -12,6 +12,10 @@ type Usernames struct {
 	Username string
 }
 
+func (Usernames) ShouldApply(sub, mod bool) bool {
+	return true
+}
+
 // Apply filter logic
 func (u Usernames) Apply(message string) int {
 	if deepContains(u.Blocked, strings.ToLower(u.Username)) {

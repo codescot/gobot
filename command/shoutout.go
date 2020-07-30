@@ -15,7 +15,7 @@ type Shoutout struct {
 
 // Execute run command
 func (so Shoutout) Execute(resp Response, event MessageEvent) {
-	if !event.IsModerator {
+	if !event.IsMod {
 		return
 	}
 

@@ -17,5 +17,6 @@ type BanHandler func()
 
 // Filter basic filter interface
 type Filter interface {
+	ShouldApply(bool, bool) bool
 	Apply(string) int
 }

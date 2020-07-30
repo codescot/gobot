@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/codescot/go-common/array"
 	"github.com/codescot/go-common/fileio"
@@ -16,11 +17,12 @@ import (
 
 // Bot irc bot object
 type Bot struct {
-	IRC      IRC `json:"irc"`
+	IRC      IRC `json:"bot"`
 	Commands map[string]command.Text
 
-	Team    []string
-	Blocked []string
+	Team     []string
+	Blocked  []string
+	BadWords []string
 
 	conn *irc.Connection
 }
@@ -132,11 +134,14 @@ func (bot *Bot) onMessageEvent(event *irc.Event) {
 
 func (bot *Bot) moderate(delete filter.DeleteHandler, ban filter.BanHandler, username string, message string) bool {
 	fs := []filter.Filter{
-		// filter.Domain{},
-		// filter.Usernames{
-		// 	Blocked:  bot.Blocked,
-		// 	Username: username,
-		// },
+		filter.Domain{},
+		filter.Usernames{
+			Blocked:  bot.Blocked,
+			Username: username,
+		},
+		filter.BadWords{
+			BadWords: bot.BadWords,
+		},
 	}
 
 	for _, f := range fs {
@@ -225,6 +230,9 @@ func (bot *Bot) nextCap() {
 func (bot *Bot) endCap() {
 	bot.conn.SendRaw(CapEnd)
 
+	time.Sleep(2 * time.Second)
+	bot.conn.Privmsg("#GeeScot", "Hello, World.\n")
+
 	bot.IRC.RequestCaps = bot.IRC.AcknowledgeCaps
 	bot.IRC.AcknowledgeCaps = []string{}
 }
@@ -239,16 +247,6 @@ func initCommands(bot Bot) {
 	for key, c := range bot.Commands {
 		addCommand(key, c)
 	}
-
-	// addCommand("ud", command.Urban{})
-
-	// addCommand("g", command.Google{})
-	// addCommand("yt", command.Youtube{})
-
-	// addCommand("define", command.Oxford{})
-	// addCommand("ety", command.Oxford{Ety: true})
-
-	// addCommand("gif", command.Giphy{})
 }
 
 var bot Bot
@@ -271,50 +269,12 @@ func startBot() {
 	conn.AddCallback(Cap, bot.onCapEvent)
 
 	initCommands(bot)
+
+	fmt.Println("connecting...")
 	conn.Connect(bot.IRC.Server)
 
 	conn.Loop()
 }
-
-// func addCommandHandler(w http.ResponseWriter, r *http.Request) {
-// 	var c command.Text
-// 	json.NewDecoder(r.Body).Decode(&c)
-// 	addCommand(c.Name, c)
-
-// 	json.NewEncoder(w).Encode(map[string]interface{}{
-// 		"status": "ok",
-// 	})
-// }
-
-// func deleteCommandHandler(w http.ResponseWriter, r *http.Request) {
-// 	var c command.Text
-// 	json.NewDecoder(r.Body).Decode(&c)
-// 	deleteCommand(c.Name)
-
-// 	json.NewEncoder(w).Encode(map[string]interface{}{
-// 		"status": "ok",
-// 	})
-// }
-
-// func disableCommandHandler(w http.ResponseWriter, r *http.Request) {
-// 	var c command.Text
-// 	json.NewDecoder(r.Body).Decode(&c)
-// 	disableCommand(c.Name)
-
-// 	json.NewEncoder(w).Encode(map[string]interface{}{
-// 		"status": "ok",
-// 	})
-// }
-
-// func enableCommandHandler(w http.ResponseWriter, r *http.Request) {
-// 	var c command.Text
-// 	json.NewDecoder(r.Body).Decode(&c)
-// 	enableCommand(c.Name)
-
-// 	json.NewEncoder(w).Encode(map[string]interface{}{
-// 		"status": "ok",
-// 	})
-// }
 
 type messageRequest struct {
 	Channel string
@@ -334,15 +294,4 @@ func sendMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	startBot()
-
-	// http.HandleFunc("/command/add", addCommandHandler)
-	// http.HandleFunc("/command/delete", deleteCommandHandler)
-	// http.HandleFunc("/command/disable", disableCommandHandler)
-	// http.HandleFunc("/command/enable", enableCommandHandler)
-
-	// http.HandleFunc("/messages/send", sendMessageHandler)
-
-	// http.Handle("/", http.FileServer(http.Dir("/app")))
-
-	// log.Fatal(http.ListenAndServe(":8080", nil))
 }
